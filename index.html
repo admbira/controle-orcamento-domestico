@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle Orçamento Doméstico | Apoia+Empresarial</title>
 <link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -9,18 +9,26 @@
 </head>
 <body>
 <aside class="sidebar">
-<div class="brand"><img src="assets/logo.jpeg" class="logo" alt="Apoia+Empresarial"><h2>Apoia<span>+</span>Empresarial</h2></div>
-<nav><a class="active" href="#dashboard">🏠 Dashboard</a><a href="#lancamentos">📋 Lançamentos</a><a href="#graficos">📊 Gráficos</a><a href="#importacao">📥 Importar/Exportar</a><a href="#relatorio">🖨️ Relatórios</a></nav>
-<div class="safe-box">🔒 Dados salvos apenas neste navegador.</div>
+  <div class="brand"><img src="assets/logo.jpeg" class="logo" alt="Apoia+Empresarial"><h2>Apoia<span>+</span>Empresarial</h2></div>
+  <nav><a class="active" href="#dashboard">🏠 Dashboard</a><a href="#lancamentos">📋 Lançamentos</a><a href="#graficos">📊 Gráficos</a><a href="#importacao">📥 Importar/Exportar</a><a href="#relatorio">🖨️ Relatórios</a></nav>
+  <div class="safe-box">🔒 Dados salvos apenas neste navegador.</div>
 </aside>
 <main class="main">
 <header class="topbar"><div><h1>CONTROLE ORÇAMENTO DOMÉSTICO</h1><p>Organize suas finanças. Planeje seu futuro.</p></div><div class="user-box"><label>Bem-vindo(a)</label><input id="nomeUsuario" placeholder="Digite seu nome"></div></header>
 <section class="filters card"><div><label>Mês</label><input type="month" id="mesReferencia"></div><div><label>Data inicial</label><input type="date" id="dataInicial"></div><div><label>Data final</label><input type="date" id="dataFinal"></div><button onclick="filtrarPeriodo()">Filtrar</button><button onclick="mesAtual()">Mês atual</button><button onclick="ultimosTresMeses()">Últimos 3 meses</button><button onclick="esteAno()">Este ano</button></section>
-<section id="dashboard" class="cards"><div class="metric card"><span>💰</span><h3>Receitas</h3><strong id="totalReceitas">R$ 0,00</strong><small id="percReceitas">0% do total</small></div><div class="metric card"><span>💸</span><h3>Despesas</h3><strong id="totalDespesas">R$ 0,00</strong><small id="percDespesas">0% do total</small></div><div class="metric card"><span>💼</span><h3>Saldo</h3><strong id="saldo">R$ 0,00</strong><small id="percSaldo">0% poupança/receita</small></div><div class="metric card"><span>🎯</span><h3>Maior despesa</h3><strong id="maiorDespesa">R$ 0,00</strong><small>Controle os maiores gastos</small></div></section>
-<section id="lancamentos" class="grid-two"><div class="card"><h2 id="tituloFormulario">Novo lançamento</h2><input type="hidden" id="editandoId"><div class="form-grid"><input type="date" id="data"><input id="descricao" placeholder="Descrição"><select id="tipo"><option>Receita</option><option>Despesa</option></select><input id="categoria" placeholder="Categoria"><input type="number" id="valor" placeholder="Valor" step="0.01"><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="btn-sec" onclick="cancelarEdicao()">Cancelar</button></div></div><div class="card"><h2>Ações rápidas</h2><div class="actions"><button onclick="prepararReceita()">+ Nova Receita</button><button class="gold" onclick="prepararDespesa()">+ Nova Despesa</button><button onclick="window.print()">Imprimir / PDF</button><button onclick="limparDados()">Limpar dados</button></div></div></section>
+<section id="dashboard" class="cards">
+<div class="metric card"><span>💰</span><h3>Receitas</h3><strong id="totalReceitas">R$ 0,00</strong><small id="percReceitas">0% do total</small></div>
+<div class="metric card"><span>💸</span><h3>Despesas</h3><strong id="totalDespesas">R$ 0,00</strong><small id="percDespesas">0% do total</small></div>
+<div class="metric card"><span>💼</span><h3>Saldo</h3><strong id="saldo">R$ 0,00</strong><small id="percSaldo">0% poupança/receita</small></div>
+<div class="metric card"><span>🎯</span><h3>Maior despesa</h3><strong id="maiorDespesa">R$ 0,00</strong><small>Controle os maiores gastos</small></div>
+</section>
+<section id="lancamentos" class="grid-two">
+<div class="card"><h2>Novo lançamento</h2><div class="form-grid"><input type="date" id="data"><input id="descricao" placeholder="Descrição"><select id="tipo"><option>Receita</option><option>Despesa</option></select><input id="categoria" placeholder="Categoria"><input type="number" id="valor" placeholder="Valor" step="0.01"><button onclick="adicionarLancamento()">Adicionar</button></div></div>
+<div class="card"><h2>Ações rápidas</h2><div class="actions"><button onclick="prepararReceita()">+ Nova Receita</button><button class="gold" onclick="prepararDespesa()">+ Nova Despesa</button><button onclick="window.print()">Imprimir / PDF</button><button onclick="limparDados()">Limpar dados</button></div></div>
+</section>
 <section id="graficos" class="charts"><div class="card chart-card"><h2>Receitas x Despesas</h2><canvas id="graficoResumo"></canvas></div><div class="card chart-card"><h2>Despesas por Categoria</h2><canvas id="graficoDespesas"></canvas></div><div class="card chart-card"><h2>Receitas por Categoria</h2><canvas id="graficoReceitas"></canvas></div><div class="card chart-card"><h2>Evolução Mensal</h2><canvas id="graficoEvolucao"></canvas></div></section>
-<section id="importacao" class="grid-two"><div class="card"><h2>Importar lista CSV/TXT</h2><p class="hint">Formato: data;descrição;tipo;categoria;valor</p><textarea id="importTexto" rows="8" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar lista</button></div><div class="card"><h2>Exportar e Backup</h2><p>Baixe seus lançamentos em CSV ou backup JSON.</p><button onclick="exportarCSV()">Exportar CSV</button><button onclick="baixarBackup()">Backup JSON</button></div></section>
-<section id="relatorio" class="card"><div class="relatorio-header"><h2>Últimos lançamentos</h2><div class="busca-grid"><input id="pesquisa" placeholder="Pesquisar lançamento" oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select></div></div><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></section>
-<footer>Apoia+Empresarial • Disciplina financeira hoje, liberdade amanhã. • Versão 2.0</footer>
+<section id="importacao" class="grid-two"><div class="card"><h2>Importar lista CSV/TXT</h2><p class="hint">Formato: data;descrição;tipo;categoria;valor</p><textarea id="importTexto" rows="8" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar lista</button></div><div class="card"><h2>Exportar</h2><p>Baixe seus lançamentos em CSV.</p><button onclick="exportarCSV()">Exportar CSV</button></div></section>
+<section id="relatorio" class="card"><h2>Últimos lançamentos</h2><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th></th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></section>
+<footer>Apoia+Empresarial • Disciplina financeira hoje, liberdade amanhã. • Versão 1.0.0</footer>
 </main>
 </body></html>
