@@ -1,181 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Controle Orçamento Doméstico | Apoia+Empresarial</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=3.0.1" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/app.js" defer></script>
+  <script src="js/app.js?v=3.0.1" defer></script>
 </head>
 <body>
   <aside class="sidebar">
     <div class="brand">
-      <img src="assets/logo.jpeg" class="logo" alt="Apoia+Empresarial">
+      <img src="assets/logo.png?v=3.0.1" class="logo" alt="Apoia+Empresarial">
       <h2>Apoia<span>+</span>Empresarial</h2>
     </div>
-
-    <nav>
+    <nav class="menu">
       <a class="active" href="#dashboard">🏠 Dashboard</a>
       <a href="#lancamentos">📋 Lançamentos</a>
       <a href="#graficos">📊 Gráficos</a>
       <a href="#importacao">📥 Importar/Exportar</a>
-      <a href="#relatorio">🖨️ Relatórios</a>
+      <a href="#relatorios">🖨️ Relatórios</a>
+      <a href="#metas">🎯 Metas</a>
+      <a href="#backup">☁️ Backup</a>
+      <a href="#ajuda">❔ Ajuda</a>
     </nav>
-
-    <div class="safe-box">🔒 Dados salvos apenas neste navegador.</div>
+    <div class="privacy-box">🔒 Dados salvos apenas neste navegador.</div>
   </aside>
 
   <main class="main">
-    <header class="topbar">
-      <div>
-        <h1>CONTROLE ORÇAMENTO DOMÉSTICO</h1>
-        <p>Organize suas finanças. Planeje seu futuro.</p>
-      </div>
-      <div class="user-box">
-        <label>Bem-vindo(a)</label>
-        <input id="nomeUsuario" placeholder="Digite seu nome">
-      </div>
-    </header>
-
-    <section class="filters card">
-      <div>
-        <label>Mês</label>
-        <input type="month" id="mesReferencia">
-      </div>
-      <div>
-        <label>Data inicial</label>
-        <input type="date" id="dataInicial">
-      </div>
-      <div>
-        <label>Data final</label>
-        <input type="date" id="dataFinal">
-      </div>
-      <button onclick="filtrarPeriodo()">Filtrar</button>
-      <button onclick="mesAtual()">Mês atual</button>
-      <button onclick="ultimosTresMeses()">Últimos 3 meses</button>
-      <button onclick="esteAno()">Este ano</button>
+    <section id="dashboard" class="summary-grid">
+      <div class="summary-card income"><div><h3>Receitas</h3><strong id="totalReceitas">R$ 0,00</strong><p>Total de entradas</p></div><span class="round-icon green">↗</span></div>
+      <div class="summary-card expense"><div><h3>Despesas</h3><strong id="totalDespesas">R$ 0,00</strong><p>Total de saídas</p></div><span class="round-icon red">↘</span></div>
+      <div class="summary-card balance"><div><h3>Saldo</h3><strong id="saldo">R$ 0,00</strong><p>Resultado do período</p></div><span class="round-icon blue">💼</span></div>
+      <div class="summary-card count"><div><h3>Lançamentos</h3><strong id="qtdLancamentos">0</strong><p>Total de lançamentos</p></div><span class="round-icon gold">☷</span></div>
     </section>
 
-    <section id="dashboard" class="cards">
-      <div class="metric card">
-        <span>💰</span>
-        <h3>Receitas</h3>
-        <strong id="totalReceitas">R$ 0,00</strong>
-        <small id="percReceitas">0% do total</small>
-      </div>
-      <div class="metric card">
-        <span>💸</span>
-        <h3>Despesas</h3>
-        <strong id="totalDespesas">R$ 0,00</strong>
-        <small id="percDespesas">0% do total</small>
-      </div>
-      <div class="metric card">
-        <span>💼</span>
-        <h3>Saldo</h3>
-        <strong id="saldo">R$ 0,00</strong>
-        <small id="percSaldo">0% poupança/receita</small>
-      </div>
-      <div class="metric card">
-        <span>🎯</span>
-        <h3>Maior despesa</h3>
-        <strong id="maiorDespesa">R$ 0,00</strong>
-        <small>Controle os maiores gastos</small>
-      </div>
+    <section class="filters-panel card">
+      <div><label>Nome do usuário</label><input id="nomeUsuario" placeholder="Digite seu nome"></div>
+      <div><label>Mês</label><input type="month" id="mesReferencia"></div>
+      <div><label>Data inicial</label><input type="date" id="dataInicial"></div>
+      <div><label>Data final</label><input type="date" id="dataFinal"></div>
+      <button onclick="filtrarPeriodo()">Filtrar</button><button onclick="mesAtual()">Mês atual</button><button onclick="ultimosTresMeses()">Últimos 3 meses</button><button onclick="esteAno()">Este ano</button>
     </section>
 
-    <section id="lancamentos" class="grid-two">
-      <div class="card">
-        <h2 id="tituloFormulario">Novo lançamento</h2>
-        <input type="hidden" id="editandoId">
+    <section id="graficos" class="charts-grid">
+      <div class="card chart-card"><h2>Receitas x Despesas</h2><canvas id="graficoResumo"></canvas></div>
+      <div class="card chart-card"><h2>Despesas por Categoria</h2><canvas id="graficoDespesas"></canvas></div>
+      <div class="card chart-card wide"><h2>Evolução Mensal</h2><canvas id="graficoEvolucao"></canvas></div>
+    </section>
 
+    <section id="lancamentos" class="card launch-panel">
+      <div class="launch-header"><h2>Lançamentos</h2><button class="new-btn" onclick="prepararNovo()">+ Novo Lançamento</button></div>
+      <div id="formWrapper" class="entry-form">
+        <h3 id="tituloFormulario">Novo lançamento</h3><input type="hidden" id="editandoId">
         <div class="form-grid">
-          <input type="date" id="data">
-          <input id="descricao" placeholder="Descrição">
-          <select id="tipo">
-            <option>Receita</option>
-            <option>Despesa</option>
-          </select>
-          <input id="categoria" placeholder="Categoria">
-          <input type="number" id="valor" placeholder="Valor" step="0.01">
-          <button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button>
-          <button class="btn-sec" onclick="cancelarEdicao()">Cancelar</button>
+          <div><label>Data</label><input type="date" id="data"></div><div><label>Descrição</label><input id="descricao" placeholder="Descrição"></div>
+          <div><label>Tipo</label><select id="tipo"><option>Receita</option><option>Despesa</option></select></div><div><label>Categoria</label><input id="categoria" placeholder="Categoria"></div>
+          <div><label>Valor</label><input type="number" id="valor" placeholder="Valor" step="0.01"></div><div class="form-actions"><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="btn-outline" onclick="cancelarEdicao()">Cancelar</button></div>
         </div>
       </div>
-
-      <div class="card">
-        <h2>Ações rápidas</h2>
-        <div class="actions">
-          <button onclick="prepararReceita()">+ Nova Receita</button>
-          <button class="gold" onclick="prepararDespesa()">+ Nova Despesa</button>
-          <button onclick="window.print()">Imprimir / PDF</button>
-          <button onclick="limparDados()">Limpar dados</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="graficos" class="charts">
-      <div class="card chart-card">
-        <h2>Receitas x Despesas</h2>
-        <canvas id="graficoResumo"></canvas>
-      </div>
-      <div class="card chart-card">
-        <h2>Despesas por Categoria</h2>
-        <canvas id="graficoDespesas"></canvas>
-      </div>
-      <div class="card chart-card">
-        <h2>Receitas por Categoria</h2>
-        <canvas id="graficoReceitas"></canvas>
-      </div>
-      <div class="card chart-card">
-        <h2>Evolução Mensal</h2>
-        <canvas id="graficoEvolucao"></canvas>
-      </div>
+      <div class="table-filters"><input id="pesquisa" placeholder="Pesquisar lançamento..." oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select><select id="filtroTipo" onchange="atualizar()"><option value="">Todos os tipos</option><option>Receita</option><option>Despesa</option></select><input type="date" id="filtroDataInicio" onchange="atualizar()"><input type="date" id="filtroDataFim" onchange="atualizar()"></div>
+      <div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></div>
+      <div class="pagination"><span id="paginacaoTexto">Mostrando lançamentos</span><div><button class="btn-outline" onclick="paginaAnterior()">Anterior</button><button class="page active">1</button><button class="btn-outline" onclick="proximaPagina()">Próxima</button></div></div>
     </section>
 
     <section id="importacao" class="grid-two">
-      <div class="card">
-        <h2>Importar lista CSV/TXT</h2>
-        <p class="hint">Formato: data;descrição;tipo;categoria;valor</p>
-        <textarea id="importTexto" rows="8" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea>
-        <button onclick="importarTexto()">Importar lista</button>
-      </div>
-
-      <div class="card">
-        <h2>Exportar e Backup</h2>
-        <p>Baixe seus lançamentos em CSV ou backup JSON.</p>
-        <button onclick="exportarCSV()">Exportar CSV</button>
-        <button onclick="baixarBackup()">Backup JSON</button>
-      </div>
+      <div class="card"><h2>Importar lista CSV/TXT</h2><p class="hint">Formato: data;descrição;tipo;categoria;valor</p><textarea id="importTexto" rows="8" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar lista</button></div>
+      <div id="backup" class="card"><h2>Exportar e Backup</h2><p>Baixe seus lançamentos em CSV ou backup JSON.</p><button onclick="exportarCSV()">Exportar CSV</button><button onclick="baixarBackup()">Backup JSON</button><button class="danger" onclick="limparDados()">Limpar dados</button></div>
     </section>
-
-    <section id="relatorio" class="card">
-      <div class="relatorio-header">
-        <h2>Últimos lançamentos</h2>
-        <div class="busca-grid">
-          <input id="pesquisa" placeholder="Pesquisar lançamento" oninput="atualizar()">
-          <select id="filtroCategoria" onchange="atualizar()">
-            <option value="">Todas as categorias</option>
-          </select>
-        </div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Descrição</th>
-            <th>Tipo</th>
-            <th>Categoria</th>
-            <th>Valor</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaLancamentos"></tbody>
-      </table>
-    </section>
-
-    <footer>Apoia+Empresarial • Disciplina financeira hoje, liberdade amanhã. • Versão 2.1 corrigida</footer>
+    <footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 3.0</footer>
   </main>
 </body>
 </html>
