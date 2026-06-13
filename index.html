@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Controle Orçamento Doméstico v4.3 | Apoia+Empresarial</title>
+<title>Controle Orçamento Doméstico v4.4 | Apoia+Empresarial</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js?v=3.3">
 
 
@@ -382,7 +382,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 </div>
 </section>
 <section id="lancamentos" class="card launch"><div class="top"><h2>Lançamentos</h2><button onclick="prepararNovo()">+ Novo Lançamento</button></div><div id="formWrapper" class="entry"><h3 id="tituloFormulario">Novo lançamento</h3><input type="hidden" id="editandoId"><div class="form"><div><label>Data</label><input type="date" id="data"></div><div><label>Descrição</label><input id="descricao"></div><div><label>Tipo</label><select id="tipo"><option>Receita</option><option>Despesa</option></select></div><div><label>Categoria</label><input id="categoria"></div><div><label>Valor</label><input type="number" id="valor" step="0.01"></div><div><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="outline" onclick="cancelarEdicao()">Cancelar</button></div></div></div><div class="tblfilters"><input id="pesquisa" placeholder="Pesquisar..." oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select><select id="filtroTipo" onchange="atualizar()"><option value="">Todos os tipos</option><option>Receita</option><option>Despesa</option></select><input type="date" id="filtroDataInicio" onchange="atualizar()"><input type="date" id="filtroDataFim" onchange="atualizar()"></div><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></div><div class="foot"><span id="paginacaoTexto"></span><div><button class="outline" onclick="paginaAnterior()">Anterior</button><button class="outline" onclick="proximaPagina()">Próxima</button></div></div></section>
-<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v4.3</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
+<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v4.4</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
 
 <div class="backup-restore-box">
   <h2>💾 Restaurar Backup JSON</h2>
@@ -436,7 +436,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 <button class="outline" onclick="window.print()">Imprimir / Salvar página como PDF</button>
 <p class="hint">Se deixar as datas em branco, o sistema usa o período filtrado no painel principal. Os gráficos serão capturados como imagem e inseridos no PDF.</p>
 </section>
-<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 4.3 PDF Corrigido</footer></main>
+<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 4.4 PDF Nativo</footer></main>
 <script>
 let lancamentos=JSON.parse(localStorage.getItem("lancamentos_orcamento"))||[],graficos={},paginaAtual=1;const porPagina=5,cores=["#1E88FF","#2ED063","#F6C21A","#8E44AD","#FF5733","#17A2B8","#AAB2BD"];
 function salvar(){localStorage.setItem("lancamentos_orcamento",JSON.stringify(lancamentos));atualizar()}function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}function dataBR(iso){if(!iso)return"";let[a,m,d]=iso.split("-");return`${d}/${m}/${a}`}function hoje(){return new Date().toISOString().slice(0,10)}
@@ -671,55 +671,20 @@ function atualizarCategoriasRelatorio(){
 
 
 
-function prepararImagemGraficoPDF(canvasId){
-  const canvas = document.getElementById(canvasId);
-  if(!canvas) return null;
 
-  try{
-    const copia = document.createElement("canvas");
-    copia.width = canvas.width || 900;
-    copia.height = canvas.height || 500;
-
-    const ctx = copia.getContext("2d");
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, copia.width, copia.height);
-    ctx.drawImage(canvas, 0, 0);
-
-    return copia.toDataURL("image/png", 1.0);
-  }catch(e){
-    console.error("Erro ao capturar gráfico:", canvasId, e);
-    return null;
-  }
+function limitarTextoPDF(doc, texto, largura){
+  return doc.splitTextToSize(String(texto || ""), largura);
 }
 
-function adicionarGraficoPDF(doc, canvasId, titulo, x, y, larguraMax, alturaMax){
-  const img = prepararImagemGraficoPDF(canvasId);
-
-  if(!img){
-    doc.setTextColor(180,0,0);
-    doc.setFontSize(8);
-    doc.text("Não foi possível capturar o gráfico: " + titulo, x, y);
-    return y + 8;
-  }
-
-  doc.setTextColor(6,24,46);
-  doc.setFontSize(10);
-  doc.text(titulo, x, y);
-
-  // Mantém cada gráfico dentro da área útil do A4 paisagem.
-  doc.addImage(img, "PNG", x, y + 4, larguraMax, alturaMax);
-  return y + alturaMax + 10;
+function totalObjeto(obj){
+  return Object.values(obj).reduce((s,v)=>s+Number(v||0),0);
 }
 
 function tabelaPercentualPDF(doc, titulo, obj, y){
-  const total = Object.values(obj).reduce((s,v)=>s+Number(v||0),0);
+  const total = totalObjeto(obj);
   const rows = Object.entries(obj)
     .sort((a,b)=>b[1]-a[1])
-    .map(([cat,val])=>[
-      String(cat),
-      moeda(val),
-      percentual(val,total)
-    ]);
+    .map(([cat,val])=>[String(cat), moeda(val), percentual(val,total)]);
 
   if(!rows.length) return y;
 
@@ -738,7 +703,7 @@ function tabelaPercentualPDF(doc, titulo, obj, y){
     body: rows,
     styles: {
       fontSize: 7,
-      cellPadding: 1.6,
+      cellPadding: 1.5,
       overflow: "linebreak",
       valign: "middle"
     },
@@ -759,6 +724,181 @@ function tabelaPercentualPDF(doc, titulo, obj, y){
   return doc.lastAutoTable ? doc.lastAutoTable.finalY + 8 : y + 20;
 }
 
+function graficoResumoPDF(doc, receitas, despesas, y){
+  if(y > 150){ doc.addPage(); y = 16; }
+
+  const total = receitas + despesas;
+  const max = Math.max(receitas, despesas, 1);
+  const x = 16;
+  const wMax = 215;
+  const h = 12;
+
+  doc.setTextColor(6,24,46);
+  doc.setFontSize(12);
+  doc.text("Gráfico: Receitas x Despesas", x, y);
+  y += 10;
+
+  const wReceitas = (receitas / max) * wMax;
+  const wDespesas = (despesas / max) * wMax;
+
+  doc.setFontSize(9);
+
+  doc.setFillColor(46,208,99);
+  doc.rect(x, y, wReceitas, h, "F");
+  doc.setTextColor(0,80,40);
+  doc.text("Receitas: " + moeda(receitas) + " • " + percentual(receitas,total), x + wReceitas + 4, y + 8);
+
+  y += 22;
+
+  doc.setFillColor(255,59,59);
+  doc.rect(x, y, wDespesas, h, "F");
+  doc.setTextColor(140,0,0);
+  doc.text("Despesas: " + moeda(despesas) + " • " + percentual(despesas,total), x + wDespesas + 4, y + 8);
+
+  return y + 22;
+}
+
+function graficoBarrasPercentuaisPDF(doc, titulo, obj, y){
+  const total = totalObjeto(obj);
+  const itens = Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,12);
+
+  if(!itens.length) return y;
+
+  if(y > 155){ doc.addPage(); y = 16; }
+
+  const x = 16;
+  const barX = 78;
+  const barMax = 145;
+  const barH = 5;
+
+  doc.setTextColor(6,24,46);
+  doc.setFontSize(12);
+  doc.text(titulo, x, y);
+  y += 9;
+
+  doc.setFontSize(7);
+
+  itens.forEach(([cat,val], idx)=>{
+    if(y > 190){
+      doc.addPage();
+      y = 16;
+    }
+
+    const pct = total ? (Number(val)/total)*100 : 0;
+    const w = (pct/100) * barMax;
+
+    doc.setTextColor(0,0,0);
+    const nome = String(cat).length > 30 ? String(cat).slice(0,27) + "..." : String(cat);
+    doc.text(nome, x, y + 4);
+
+    const cores = [
+      [30,136,255], [46,208,99], [246,194,26], [142,68,173],
+      [255,87,51], [23,162,184], [170,178,189], [255,107,107],
+      [77,150,255], [107,203,119], [255,217,61], [132,94,194]
+    ];
+    const cor = cores[idx % cores.length];
+    doc.setFillColor(cor[0], cor[1], cor[2]);
+    doc.rect(barX, y, w, barH, "F");
+
+    doc.setTextColor(0,0,0);
+    doc.text(moeda(val) + " • " + percentual(val,total), barX + barMax + 4, y + 4);
+
+    y += 9;
+  });
+
+  if(Object.keys(obj).length > 12){
+    doc.setTextColor(100,100,100);
+    doc.text("Observação: gráfico mostra as 12 maiores categorias. A tabela percentual contém todas.", x, y + 2);
+    y += 8;
+  }
+
+  return y + 6;
+}
+
+function graficoEvolucaoPDF(doc, lista, y){
+  const meses = {};
+  lista.forEach(l=>{
+    if(!l.data || l.data.length < 7) return;
+    const chave = l.data.slice(0,7);
+    if(!meses[chave]) meses[chave] = {r:0,d:0};
+    if(l.tipo === "Receita") meses[chave].r += Number(l.valor||0);
+    else meses[chave].d += Number(l.valor||0);
+  });
+
+  const labels = Object.keys(meses).sort();
+  if(!labels.length) return y;
+
+  if(y > 135){ doc.addPage(); y = 16; }
+
+  const x0 = 18;
+  const y0 = y + 72;
+  const w = 245;
+  const h = 58;
+  const max = Math.max(...labels.map(m=>Math.max(meses[m].r, meses[m].d)), 1);
+
+  doc.setTextColor(6,24,46);
+  doc.setFontSize(12);
+  doc.text("Gráfico: Evolução Mensal", x0, y);
+  y += 8;
+
+  // eixo
+  doc.setDrawColor(180,180,180);
+  doc.line(x0, y0, x0 + w, y0);
+  doc.line(x0, y0, x0, y0 - h);
+
+  function ponto(i, valor){
+    const x = labels.length === 1 ? x0 + w/2 : x0 + (i/(labels.length-1))*w;
+    const yy = y0 - (Number(valor||0)/max)*h;
+    return {x, y: yy};
+  }
+
+  // linha receitas
+  doc.setDrawColor(46,208,99);
+  doc.setLineWidth(1);
+  for(let i=0;i<labels.length-1;i++){
+    const p1 = ponto(i, meses[labels[i]].r);
+    const p2 = ponto(i+1, meses[labels[i+1]].r);
+    doc.line(p1.x,p1.y,p2.x,p2.y);
+  }
+  labels.forEach((m,i)=>{
+    const p = ponto(i, meses[m].r);
+    doc.setFillColor(46,208,99);
+    doc.circle(p.x,p.y,1.8,"F");
+  });
+
+  // linha despesas
+  doc.setDrawColor(255,59,59);
+  for(let i=0;i<labels.length-1;i++){
+    const p1 = ponto(i, meses[labels[i]].d);
+    const p2 = ponto(i+1, meses[labels[i+1]].d);
+    doc.line(p1.x,p1.y,p2.x,p2.y);
+  }
+  labels.forEach((m,i)=>{
+    const p = ponto(i, meses[m].d);
+    doc.setFillColor(255,59,59);
+    doc.circle(p.x,p.y,1.8,"F");
+  });
+
+  // legendas
+  doc.setFontSize(8);
+  doc.setTextColor(0,100,40);
+  doc.text("Receitas", x0, y + 5);
+  doc.setTextColor(180,0,0);
+  doc.text("Despesas", x0 + 35, y + 5);
+
+  // meses
+  doc.setTextColor(0,0,0);
+  labels.forEach((m,i)=>{
+    const mes = Number(m.slice(5,7));
+    const ano = m.slice(2,4);
+    const nome = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][mes-1] + "/" + ano;
+    const x = labels.length === 1 ? x0 + w/2 : x0 + (i/(labels.length-1))*w;
+    doc.text(nome, x-6, y0 + 6);
+  });
+
+  return y0 + 14;
+}
+
 function gerarRelatorioPDF(){
   if(!window.jspdf || !window.jspdf.jsPDF){
     alert("Biblioteca PDF não carregou. Use Imprimir / Salvar como PDF.");
@@ -766,19 +906,8 @@ function gerarRelatorioPDF(){
   }
 
   try{
-    if(graficos){
-      Object.values(graficos).forEach(g=>{
-        if(g && typeof g.update === "function") g.update("none");
-      });
-    }
-
     const { jsPDF } = window.jspdf;
-
-    // Paisagem para evitar corte dos percentuais e gráficos.
     const doc = new jsPDF({orientation:"landscape", unit:"mm", format:"a4"});
-    const pageWidth = 297;
-    const pageHeight = 210;
-    const margin = 10;
 
     let lista;
     if(typeof listaParaRelatorio === "function"){
@@ -797,51 +926,43 @@ function gerarRelatorioPDF(){
     const incluirLancamentos = !document.getElementById("relLancamentos") || relLancamentos.checked;
 
     doc.setFillColor(6,24,46);
-    doc.rect(0,0,pageWidth,24,"F");
+    doc.rect(0,0,297,24,"F");
     doc.setTextColor(246,194,26);
     doc.setFontSize(15);
-    doc.text("CONTROLE ORÇAMENTO DOMÉSTICO", margin, 10);
+    doc.text("CONTROLE ORÇAMENTO DOMÉSTICO", 10, 10);
     doc.setTextColor(255,255,255);
     doc.setFontSize(9);
-    doc.text("Apoia+Empresarial • Relatório financeiro personalizado", margin, 17);
+    doc.text("Apoia+Empresarial • Relatório financeiro personalizado", 10, 17);
 
     doc.setTextColor(0,0,0);
     doc.setFontSize(9);
-    doc.text("Nome: " + nome, margin, 33);
-    doc.text("Data do relatório: " + new Date().toLocaleDateString("pt-BR"), margin, 39);
-    doc.text("Lançamentos selecionados: " + lista.length, margin, 45);
+    doc.text("Nome: " + nome, 10, 33);
+    doc.text("Data do relatório: " + new Date().toLocaleDateString("pt-BR"), 10, 39);
+    doc.text("Lançamentos selecionados: " + lista.length, 10, 45);
 
     let y = 56;
 
     if(incluirResumo){
       doc.setFontSize(11);
       doc.setTextColor(0,110,60);
-      doc.text("Receitas: " + moeda(receitas), margin, y);
+      doc.text("Receitas: " + moeda(receitas),10,y);
       doc.setTextColor(200,30,30);
-      doc.text("Despesas: " + moeda(despesas), 100, y);
+      doc.text("Despesas: " + moeda(despesas),100,y);
       doc.setTextColor(saldo >= 0 ? 0 : 200, saldo >= 0 ? 100 : 30, saldo >= 0 ? 60 : 30);
-      doc.text("Saldo: " + moeda(saldo), 200, y);
+      doc.text("Saldo: " + moeda(saldo),200,y);
       y += 10;
 
-      const objDespesasPDF = agrupar(lista,"Despesa");
-      const objReceitasPDF = agrupar(lista,"Receita");
-
-      y = tabelaPercentualPDF(doc, "Participação percentual das despesas", objDespesasPDF, y);
-      y = tabelaPercentualPDF(doc, "Participação percentual das receitas", objReceitasPDF, y);
+      y = tabelaPercentualPDF(doc, "Participação percentual das despesas", agrupar(lista,"Despesa"), y);
+      y = tabelaPercentualPDF(doc, "Participação percentual das receitas", agrupar(lista,"Receita"), y);
     }
 
     if(incluirGraficos){
       doc.addPage();
       y = 16;
 
-      // Cada gráfico vai em largura controlada, sem ultrapassar a área da página.
-      y = adicionarGraficoPDF(doc, "graficoResumo", "Gráfico: Receitas x Despesas", margin, y, 260, 70);
-
-      if(y > 130){ doc.addPage(); y = 16; }
-      y = adicionarGraficoPDF(doc, "graficoDespesas", "Gráfico: Despesas por Categoria", margin, y, 260, 70);
-
-      if(y > 130){ doc.addPage(); y = 16; }
-      y = adicionarGraficoPDF(doc, "graficoEvolucao", "Gráfico: Evolução Mensal", margin, y, 260, 70);
+      y = graficoResumoPDF(doc, receitas, despesas, y);
+      y = graficoBarrasPercentuaisPDF(doc, "Gráfico: Despesas por Categoria (% do total)", agrupar(lista,"Despesa"), y);
+      y = graficoEvolucaoPDF(doc, lista, y);
     }
 
     if(incluirLancamentos){
@@ -861,7 +982,7 @@ function gerarRelatorioPDF(){
 
       doc.setTextColor(6,24,46);
       doc.setFontSize(11);
-      doc.text("Lançamentos selecionados", margin, y);
+      doc.text("Lançamentos selecionados", 10, y);
 
       doc.autoTable({
         startY: y + 5,
@@ -869,7 +990,7 @@ function gerarRelatorioPDF(){
         body: rows,
         styles: {
           fontSize: 7,
-          cellPadding: 1.6,
+          cellPadding: 1.5,
           overflow: "linebreak"
         },
         headStyles: {
@@ -889,10 +1010,10 @@ function gerarRelatorioPDF(){
       });
     }
 
-    doc.save("relatorio-orcamento-domestico-corrigido.pdf");
+    doc.save("relatorio-orcamento-domestico-v4-4.pdf");
   }catch(e){
     console.error(e);
-    alert("Não foi possível gerar o PDF corrigido. Use a opção Imprimir / Salvar como PDF.");
+    alert("Não foi possível gerar o PDF. Use a opção Imprimir / Salvar como PDF.");
   }
 }
 

@@ -1,10 +1,10 @@
-# Controle Orçamento Doméstico v4.3
+# Controle Orçamento Doméstico v4.4
 
 Correção do relatório PDF:
-- PDF em A4 paisagem para evitar cortes.
-- Percentuais dentro da área de impressão.
-- Tabelas com largura fixa e quebra automática.
-- Gráficos redimensionados para caber na página.
-- Lançamentos em página separada.
+- Gráficos do PDF desenhados nativamente pelo jsPDF.
+- Não captura mais imagens/canvas da tela.
+- Evita cortes, textos apagados e legendas fora da página.
+- Gráfico de categorias em barras percentuais para caber melhor no PDF.
+- PDF em A4 paisagem.
 
 Substitua os arquivos no GitHub e pressione Ctrl + F5.
