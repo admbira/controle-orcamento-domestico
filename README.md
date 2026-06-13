@@ -1,3 +1,9 @@
-# Controle Orçamento Doméstico v4.0
+# Controle Orçamento Doméstico v4.1
 
-Atualização com percentuais nos gráficos, no quadro de categorias e no relatório PDF.
+Correções:
+- Removido erro JavaScript do await.
+- Botão Restaurar Backup JSON corrigido.
+- Relatório PDF mantido.
+- Percentuais mantidos.
+
+Substitua os arquivos no GitHub e pressione Ctrl + F5.

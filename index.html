@@ -3,8 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Controle Orçamento Doméstico v4.0 | Apoia+Empresarial</title>
+<title>Controle Orçamento Doméstico v4.1 | Apoia+Empresarial</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js?v=3.3">
+
+
+
 function restaurarBackupJSON(){
   const input = document.getElementById("arquivoBackupJson");
   const status = document.getElementById("statusBackupJson");
@@ -28,23 +31,19 @@ function restaurarBackupJSON(){
       const dados = JSON.parse(e.target.result);
 
       if(!Array.isArray(dados)){
-        throw new Error("O arquivo não contém uma lista de lançamentos.");
+        throw new Error("Arquivo sem lista de lançamentos.");
       }
 
       const restaurados = dados.map((l, index) => {
-        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
-          throw new Error("Estrutura inválida na linha " + (index + 1));
-        }
-
         return {
           id: l.id || Date.now() + index,
-          data: String(l.data).slice(0,10),
-          descricao: String(l.descricao),
-          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          data: String(l.data || "").slice(0,10),
+          descricao: String(l.descricao || "Lançamento"),
+          tipo: String(l.tipo || "Despesa").toLowerCase().startsWith("r") ? "Receita" : "Despesa",
           categoria: String(l.categoria || "Outros"),
-          valor: Number(l.valor)
+          valor: Number(l.valor || 0)
         };
-      });
+      }).filter(l => l.data && l.valor);
 
       if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
         return;
@@ -53,13 +52,8 @@ function restaurarBackupJSON(){
       lancamentos = restaurados;
       localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
 
-      if(typeof paginaAtual !== "undefined"){
-        paginaAtual = 1;
-      }
-
-      if(typeof atualizar === "function"){
-        atualizar();
-      }
+      if(typeof paginaAtual !== "undefined") paginaAtual = 1;
+      if(typeof atualizar === "function") atualizar();
 
       if(status){
         status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
@@ -69,9 +63,7 @@ function restaurarBackupJSON(){
     }catch(err){
       console.error(err);
       alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
-      if(status){
-        status.textContent = "Erro ao restaurar backup JSON.";
-      }
+      if(status) status.textContent = "Erro ao restaurar backup JSON.";
     }
   };
 
@@ -80,6 +72,9 @@ function restaurarBackupJSON(){
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js?v=3.3">
+
+
+
 function restaurarBackupJSON(){
   const input = document.getElementById("arquivoBackupJson");
   const status = document.getElementById("statusBackupJson");
@@ -103,23 +98,19 @@ function restaurarBackupJSON(){
       const dados = JSON.parse(e.target.result);
 
       if(!Array.isArray(dados)){
-        throw new Error("O arquivo não contém uma lista de lançamentos.");
+        throw new Error("Arquivo sem lista de lançamentos.");
       }
 
       const restaurados = dados.map((l, index) => {
-        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
-          throw new Error("Estrutura inválida na linha " + (index + 1));
-        }
-
         return {
           id: l.id || Date.now() + index,
-          data: String(l.data).slice(0,10),
-          descricao: String(l.descricao),
-          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          data: String(l.data || "").slice(0,10),
+          descricao: String(l.descricao || "Lançamento"),
+          tipo: String(l.tipo || "Despesa").toLowerCase().startsWith("r") ? "Receita" : "Despesa",
           categoria: String(l.categoria || "Outros"),
-          valor: Number(l.valor)
+          valor: Number(l.valor || 0)
         };
-      });
+      }).filter(l => l.data && l.valor);
 
       if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
         return;
@@ -128,13 +119,8 @@ function restaurarBackupJSON(){
       lancamentos = restaurados;
       localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
 
-      if(typeof paginaAtual !== "undefined"){
-        paginaAtual = 1;
-      }
-
-      if(typeof atualizar === "function"){
-        atualizar();
-      }
+      if(typeof paginaAtual !== "undefined") paginaAtual = 1;
+      if(typeof atualizar === "function") atualizar();
 
       if(status){
         status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
@@ -144,9 +130,7 @@ function restaurarBackupJSON(){
     }catch(err){
       console.error(err);
       alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
-      if(status){
-        status.textContent = "Erro ao restaurar backup JSON.";
-      }
+      if(status) status.textContent = "Erro ao restaurar backup JSON.";
     }
   };
 
@@ -155,6 +139,9 @@ function restaurarBackupJSON(){
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js?v=3.3">
+
+
+
 function restaurarBackupJSON(){
   const input = document.getElementById("arquivoBackupJson");
   const status = document.getElementById("statusBackupJson");
@@ -178,23 +165,19 @@ function restaurarBackupJSON(){
       const dados = JSON.parse(e.target.result);
 
       if(!Array.isArray(dados)){
-        throw new Error("O arquivo não contém uma lista de lançamentos.");
+        throw new Error("Arquivo sem lista de lançamentos.");
       }
 
       const restaurados = dados.map((l, index) => {
-        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
-          throw new Error("Estrutura inválida na linha " + (index + 1));
-        }
-
         return {
           id: l.id || Date.now() + index,
-          data: String(l.data).slice(0,10),
-          descricao: String(l.descricao),
-          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          data: String(l.data || "").slice(0,10),
+          descricao: String(l.descricao || "Lançamento"),
+          tipo: String(l.tipo || "Despesa").toLowerCase().startsWith("r") ? "Receita" : "Despesa",
           categoria: String(l.categoria || "Outros"),
-          valor: Number(l.valor)
+          valor: Number(l.valor || 0)
         };
-      });
+      }).filter(l => l.data && l.valor);
 
       if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
         return;
@@ -203,13 +186,8 @@ function restaurarBackupJSON(){
       lancamentos = restaurados;
       localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
 
-      if(typeof paginaAtual !== "undefined"){
-        paginaAtual = 1;
-      }
-
-      if(typeof atualizar === "function"){
-        atualizar();
-      }
+      if(typeof paginaAtual !== "undefined") paginaAtual = 1;
+      if(typeof atualizar === "function") atualizar();
 
       if(status){
         status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
@@ -219,9 +197,7 @@ function restaurarBackupJSON(){
     }catch(err){
       console.error(err);
       alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
-      if(status){
-        status.textContent = "Erro ao restaurar backup JSON.";
-      }
+      if(status) status.textContent = "Erro ao restaurar backup JSON.";
     }
   };
 
@@ -230,6 +206,9 @@ function restaurarBackupJSON(){
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js?v=3.3">
+
+
+
 function restaurarBackupJSON(){
   const input = document.getElementById("arquivoBackupJson");
   const status = document.getElementById("statusBackupJson");
@@ -253,23 +232,19 @@ function restaurarBackupJSON(){
       const dados = JSON.parse(e.target.result);
 
       if(!Array.isArray(dados)){
-        throw new Error("O arquivo não contém uma lista de lançamentos.");
+        throw new Error("Arquivo sem lista de lançamentos.");
       }
 
       const restaurados = dados.map((l, index) => {
-        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
-          throw new Error("Estrutura inválida na linha " + (index + 1));
-        }
-
         return {
           id: l.id || Date.now() + index,
-          data: String(l.data).slice(0,10),
-          descricao: String(l.descricao),
-          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          data: String(l.data || "").slice(0,10),
+          descricao: String(l.descricao || "Lançamento"),
+          tipo: String(l.tipo || "Despesa").toLowerCase().startsWith("r") ? "Receita" : "Despesa",
           categoria: String(l.categoria || "Outros"),
-          valor: Number(l.valor)
+          valor: Number(l.valor || 0)
         };
-      });
+      }).filter(l => l.data && l.valor);
 
       if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
         return;
@@ -278,13 +253,8 @@ function restaurarBackupJSON(){
       lancamentos = restaurados;
       localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
 
-      if(typeof paginaAtual !== "undefined"){
-        paginaAtual = 1;
-      }
-
-      if(typeof atualizar === "function"){
-        atualizar();
-      }
+      if(typeof paginaAtual !== "undefined") paginaAtual = 1;
+      if(typeof atualizar === "function") atualizar();
 
       if(status){
         status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
@@ -294,9 +264,7 @@ function restaurarBackupJSON(){
     }catch(err){
       console.error(err);
       alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
-      if(status){
-        status.textContent = "Erro ao restaurar backup JSON.";
-      }
+      if(status) status.textContent = "Erro ao restaurar backup JSON.";
     }
   };
 
@@ -305,6 +273,9 @@ function restaurarBackupJSON(){
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js">
+
+
+
 function restaurarBackupJSON(){
   const input = document.getElementById("arquivoBackupJson");
   const status = document.getElementById("statusBackupJson");
@@ -328,23 +299,19 @@ function restaurarBackupJSON(){
       const dados = JSON.parse(e.target.result);
 
       if(!Array.isArray(dados)){
-        throw new Error("O arquivo não contém uma lista de lançamentos.");
+        throw new Error("Arquivo sem lista de lançamentos.");
       }
 
       const restaurados = dados.map((l, index) => {
-        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
-          throw new Error("Estrutura inválida na linha " + (index + 1));
-        }
-
         return {
           id: l.id || Date.now() + index,
-          data: String(l.data).slice(0,10),
-          descricao: String(l.descricao),
-          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          data: String(l.data || "").slice(0,10),
+          descricao: String(l.descricao || "Lançamento"),
+          tipo: String(l.tipo || "Despesa").toLowerCase().startsWith("r") ? "Receita" : "Despesa",
           categoria: String(l.categoria || "Outros"),
-          valor: Number(l.valor)
+          valor: Number(l.valor || 0)
         };
-      });
+      }).filter(l => l.data && l.valor);
 
       if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
         return;
@@ -353,13 +320,8 @@ function restaurarBackupJSON(){
       lancamentos = restaurados;
       localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
 
-      if(typeof paginaAtual !== "undefined"){
-        paginaAtual = 1;
-      }
-
-      if(typeof atualizar === "function"){
-        atualizar();
-      }
+      if(typeof paginaAtual !== "undefined") paginaAtual = 1;
+      if(typeof atualizar === "function") atualizar();
 
       if(status){
         status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
@@ -369,9 +331,7 @@ function restaurarBackupJSON(){
     }catch(err){
       console.error(err);
       alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
-      if(status){
-        status.textContent = "Erro ao restaurar backup JSON.";
-      }
+      if(status) status.textContent = "Erro ao restaurar backup JSON.";
     }
   };
 
@@ -422,7 +382,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 </div>
 </section>
 <section id="lancamentos" class="card launch"><div class="top"><h2>Lançamentos</h2><button onclick="prepararNovo()">+ Novo Lançamento</button></div><div id="formWrapper" class="entry"><h3 id="tituloFormulario">Novo lançamento</h3><input type="hidden" id="editandoId"><div class="form"><div><label>Data</label><input type="date" id="data"></div><div><label>Descrição</label><input id="descricao"></div><div><label>Tipo</label><select id="tipo"><option>Receita</option><option>Despesa</option></select></div><div><label>Categoria</label><input id="categoria"></div><div><label>Valor</label><input type="number" id="valor" step="0.01"></div><div><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="outline" onclick="cancelarEdicao()">Cancelar</button></div></div></div><div class="tblfilters"><input id="pesquisa" placeholder="Pesquisar..." oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select><select id="filtroTipo" onchange="atualizar()"><option value="">Todos os tipos</option><option>Receita</option><option>Despesa</option></select><input type="date" id="filtroDataInicio" onchange="atualizar()"><input type="date" id="filtroDataFim" onchange="atualizar()"></div><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></div><div class="foot"><span id="paginacaoTexto"></span><div><button class="outline" onclick="paginaAnterior()">Anterior</button><button class="outline" onclick="proximaPagina()">Próxima</button></div></div></section>
-<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v4.0</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
+<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v4.1</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
 
 <div class="backup-restore-box">
   <h2>💾 Restaurar Backup JSON</h2>
@@ -476,7 +436,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 <button class="outline" onclick="window.print()">Imprimir / Salvar página como PDF</button>
 <p class="hint">Se deixar as datas em branco, o sistema usa o período filtrado no painel principal. Os gráficos serão capturados como imagem e inseridos no PDF.</p>
 </section>
-<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 4.0 Percentuais</footer></main>
+<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 4.1 Corrigida</footer></main>
 <script>
 let lancamentos=JSON.parse(localStorage.getItem("lancamentos_orcamento"))||[],graficos={},paginaAtual=1;const porPagina=5,cores=["#1E88FF","#2ED063","#F6C21A","#8E44AD","#FF5733","#17A2B8","#AAB2BD"];
 function salvar(){localStorage.setItem("lancamentos_orcamento",JSON.stringify(lancamentos));atualizar()}function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}function dataBR(iso){if(!iso)return"";let[a,m,d]=iso.split("-");return`${d}/${m}/${a}`}function hoje(){return new Date().toISOString().slice(0,10)}
@@ -659,33 +619,15 @@ function atualizarCategoriasRelatorio(){
   if(cats.includes(atual)) select.value = atual;
 }
 
-function aguardar(ms){
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
-async function prepararGraficosParaPDF(){
-  try{
-    Object.values(graficos).forEach(g => {
-      if(g && typeof g.resize === "function") g.resize();
-      if(g && typeof g.update === "function") g.update("none");
-    });
-  }catch(e){}
-
-  await aguardar(500);
-}
-
-async function capturarCanvasComoImagem(canvasId){
+function capturarCanvasComoImagem(canvasId){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return null;
 
   try{
-    const contexto = canvas.getContext("2d");
-    if(!contexto) return null;
-
-    // Cria uma cópia com fundo branco para evitar gráfico transparente/invisível no PDF.
     const copia = document.createElement("canvas");
-    copia.width = canvas.width;
-    copia.height = canvas.height;
+    copia.width = canvas.width || 900;
+    copia.height = canvas.height || 500;
 
     const ctx = copia.getContext("2d");
     ctx.fillStyle = "#ffffff";
@@ -694,12 +636,13 @@ async function capturarCanvasComoImagem(canvasId){
 
     return copia.toDataURL("image/png", 1.0);
   }catch(e){
+    console.error("Erro ao capturar gráfico", canvasId, e);
     return null;
   }
 }
 
-async function addChartToPDF(doc, canvasId, titulo, x, y, w){
-  const img = await capturarCanvasComoImagem(canvasId);
+function addChartToPDFSimples(doc, canvasId, titulo, x, y, w){
+  const img = capturarCanvasComoImagem(canvasId);
 
   if(!img){
     doc.setTextColor(200,0,0);
@@ -718,14 +661,28 @@ async function addChartToPDF(doc, canvasId, titulo, x, y, w){
   return y + altura + 12;
 }
 
-async 
 function tabelaPercentualPDF(doc,titulo,obj,y){
   const total=Object.values(obj).reduce((s,v)=>s+Number(v||0),0);
   const rows=Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>[cat,moeda(val),percentual(val,total)]);
+
   if(!rows.length) return y;
-  doc.setTextColor(6,24,46);doc.setFontSize(11);doc.text(titulo,14,y);
-  doc.autoTable({startY:y+4,head:[["Categoria","Valor","% do total"]],body:rows,styles:{fontSize:8,cellPadding:2},headStyles:{fillColor:[6,24,46],textColor:[246,194,26]},alternateRowStyles:{fillColor:[240,245,250]},columnStyles:{1:{halign:"right"},2:{halign:"right"}},margin:{left:14,right:14}});
-  return doc.lastAutoTable?doc.lastAutoTable.finalY+8:y+20;
+
+  doc.setTextColor(6,24,46);
+  doc.setFontSize(11);
+  doc.text(titulo,14,y);
+
+  doc.autoTable({
+    startY:y+4,
+    head:[["Categoria","Valor","% do total"]],
+    body:rows,
+    styles:{fontSize:8,cellPadding:2},
+    headStyles:{fillColor:[6,24,46],textColor:[246,194,26]},
+    alternateRowStyles:{fillColor:[240,245,250]},
+    columnStyles:{1:{halign:"right"},2:{halign:"right"}},
+    margin:{left:14,right:14}
+  });
+
+  return doc.lastAutoTable ? doc.lastAutoTable.finalY+8 : y+20;
 }
 
 function gerarRelatorioPDF(){
@@ -734,19 +691,23 @@ function gerarRelatorioPDF(){
     return;
   }
 
-  atualizarCategoriasRelatorio();
-
-  const botao = event?.target;
-  const textoOriginal = botao ? botao.textContent : "";
-  if(botao) botao.textContent = "Gerando PDF...";
-
   try{
-    await prepararGraficosParaPDF();
+    if(Object.values(graficos || {}).length){
+      Object.values(graficos).forEach(g => {
+        if(g && typeof g.update === "function") g.update("none");
+      });
+    }
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({orientation:"portrait", unit:"mm", format:"a4"});
 
-    const lista = listaParaRelatorio();
+    let lista;
+    if(typeof listaParaRelatorio === "function"){
+      lista = listaParaRelatorio();
+    }else{
+      lista = aplicarFiltrosTabela(periodoFiltrado());
+    }
+
     const receitas = lista.filter(l=>l.tipo==="Receita").reduce((s,l)=>s+l.valor,0);
     const despesas = lista.filter(l=>l.tipo==="Despesa").reduce((s,l)=>s+l.valor,0);
     const saldo = receitas - despesas;
@@ -763,54 +724,50 @@ function gerarRelatorioPDF(){
 
     doc.setTextColor(0,0,0);
     doc.setFontSize(10);
-    doc.text(`Nome: ${nome}`,14,40);
-    doc.text(`Data do relatório: ${new Date().toLocaleDateString("pt-BR")}`,14,46);
-    doc.text(`Lançamentos selecionados: ${lista.length}`,14,52);
+    doc.text("Nome: " + nome,14,40);
+    doc.text("Data do relatório: " + new Date().toLocaleDateString("pt-BR"),14,46);
+    doc.text("Lançamentos selecionados: " + lista.length,14,52);
 
-    let periodoTxt = "Período: ";
-    if(relDataInicio.value || relDataFim.value){
-      periodoTxt += `${relDataInicio.value ? dataBR(relDataInicio.value) : "início"} até ${relDataFim.value ? dataBR(relDataFim.value) : "fim"}`;
-    } else {
-      periodoTxt += "filtro principal do painel";
-    }
-    doc.text(periodoTxt,14,58);
+    let y = 66;
 
-    let y = 70;
+    const incluirResumo = !document.getElementById("relResumo") || relResumo.checked;
+    const incluirGraficos = !document.getElementById("relGraficos") || relGraficos.checked;
+    const incluirLancamentos = !document.getElementById("relLancamentos") || relLancamentos.checked;
 
-    if(relResumo.checked){
+    if(incluirResumo){
       doc.setFontSize(12);
       doc.setTextColor(0,110,60);
-      doc.text(`Receitas: ${moeda(receitas)}`,14,y);
+      doc.text("Receitas: " + moeda(receitas),14,y);
       doc.setTextColor(200,30,30);
-      doc.text(`Despesas: ${moeda(despesas)}`,75,y);
+      doc.text("Despesas: " + moeda(despesas),75,y);
       doc.setTextColor(saldo >= 0 ? 0 : 200, saldo >= 0 ? 100 : 30, saldo >= 0 ? 60 : 30);
-      doc.text(`Saldo: ${moeda(saldo)}`,140,y);
+      doc.text("Saldo: " + moeda(saldo),140,y);
       y += 14;
-    }
 
-    if(relResumo.checked){
       const objDespesasPDF=agrupar(lista,"Despesa");
       const objReceitasPDF=agrupar(lista,"Receita");
+
       if(y>230){doc.addPage();y=20;}
       y=tabelaPercentualPDF(doc,"Participação percentual das despesas",objDespesasPDF,y);
+
       if(y>230){doc.addPage();y=20;}
       y=tabelaPercentualPDF(doc,"Participação percentual das receitas",objReceitasPDF,y);
     }
 
-    if(relGraficos.checked){
-      if(y > 220){ doc.addPage(); y = 20; }
-      y = await addChartToPDF(doc, "graficoResumo", "Gráfico: Receitas x Despesas", 14, y, 175);
+    if(incluirGraficos){
+      if(y > 205){ doc.addPage(); y = 20; }
+      y = addChartToPDFSimples(doc, "graficoResumo", "Gráfico: Receitas x Despesas", 14, y, 175);
 
       if(y > 205){ doc.addPage(); y = 20; }
-      y = await addChartToPDF(doc, "graficoDespesas", "Gráfico: Despesas por Categoria", 14, y, 175);
+      y = addChartToPDFSimples(doc, "graficoDespesas", "Gráfico: Despesas por Categoria", 14, y, 175);
 
       if(y > 205){ doc.addPage(); y = 20; }
-      y = await addChartToPDF(doc, "graficoEvolucao", "Gráfico: Evolução Mensal", 14, y, 175);
+      y = addChartToPDFSimples(doc, "graficoEvolucao", "Gráfico: Evolução Mensal", 14, y, 175);
 
       y += 4;
     }
 
-    if(relLancamentos.checked){
+    if(incluirLancamentos){
       if(y > 245){ doc.addPage(); y = 20; }
 
       const rows = lista
@@ -836,12 +793,10 @@ function gerarRelatorioPDF(){
       });
     }
 
-    doc.save("relatorio-orcamento-domestico-com-graficos.pdf");
+    doc.save("relatorio-orcamento-domestico.pdf");
   }catch(e){
-    alert("Não foi possível gerar o PDF com gráficos. Use a opção Imprimir / Salvar página como PDF.");
     console.error(e);
-  }finally{
-    if(botao) botao.textContent = textoOriginal;
+    alert("Não foi possível gerar o PDF. Use a opção Imprimir / Salvar como PDF.");
   }
 }
 
@@ -850,6 +805,9 @@ atualizar = function(){
   atualizarOriginal();
   atualizarCategoriasRelatorio();
 };
+
+
+
 
 function restaurarBackupJSON(){
   const input = document.getElementById("arquivoBackupJson");
@@ -874,23 +832,19 @@ function restaurarBackupJSON(){
       const dados = JSON.parse(e.target.result);
 
       if(!Array.isArray(dados)){
-        throw new Error("O arquivo não contém uma lista de lançamentos.");
+        throw new Error("Arquivo sem lista de lançamentos.");
       }
 
       const restaurados = dados.map((l, index) => {
-        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
-          throw new Error("Estrutura inválida na linha " + (index + 1));
-        }
-
         return {
           id: l.id || Date.now() + index,
-          data: String(l.data).slice(0,10),
-          descricao: String(l.descricao),
-          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          data: String(l.data || "").slice(0,10),
+          descricao: String(l.descricao || "Lançamento"),
+          tipo: String(l.tipo || "Despesa").toLowerCase().startsWith("r") ? "Receita" : "Despesa",
           categoria: String(l.categoria || "Outros"),
-          valor: Number(l.valor)
+          valor: Number(l.valor || 0)
         };
-      });
+      }).filter(l => l.data && l.valor);
 
       if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
         return;
@@ -899,13 +853,8 @@ function restaurarBackupJSON(){
       lancamentos = restaurados;
       localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
 
-      if(typeof paginaAtual !== "undefined"){
-        paginaAtual = 1;
-      }
-
-      if(typeof atualizar === "function"){
-        atualizar();
-      }
+      if(typeof paginaAtual !== "undefined") paginaAtual = 1;
+      if(typeof atualizar === "function") atualizar();
 
       if(status){
         status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
@@ -915,9 +864,7 @@ function restaurarBackupJSON(){
     }catch(err){
       console.error(err);
       alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
-      if(status){
-        status.textContent = "Erro ao restaurar backup JSON.";
-      }
+      if(status) status.textContent = "Erro ao restaurar backup JSON.";
     }
   };
 
