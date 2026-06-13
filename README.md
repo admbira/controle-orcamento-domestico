@@ -1,9 +1,8 @@
-# Controle Orçamento Doméstico v4.1
+# Controle Orçamento Doméstico v4.2
 
-Correções:
-- Removido erro JavaScript do await.
-- Botão Restaurar Backup JSON corrigido.
-- Relatório PDF mantido.
-- Percentuais mantidos.
+Correção:
+- Gráfico de Evolução Mensal agrupando por mês/ano.
+- Melhor visual quando existe apenas um mês no período.
+- Pontos maiores e eixo iniciado em zero.
 
 Substitua os arquivos no GitHub e pressione Ctrl + F5.

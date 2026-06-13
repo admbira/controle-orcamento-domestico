@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Controle Orçamento Doméstico v4.1 | Apoia+Empresarial</title>
+<title>Controle Orçamento Doméstico v4.2 | Apoia+Empresarial</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js?v=3.3">
 
 
@@ -382,7 +382,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 </div>
 </section>
 <section id="lancamentos" class="card launch"><div class="top"><h2>Lançamentos</h2><button onclick="prepararNovo()">+ Novo Lançamento</button></div><div id="formWrapper" class="entry"><h3 id="tituloFormulario">Novo lançamento</h3><input type="hidden" id="editandoId"><div class="form"><div><label>Data</label><input type="date" id="data"></div><div><label>Descrição</label><input id="descricao"></div><div><label>Tipo</label><select id="tipo"><option>Receita</option><option>Despesa</option></select></div><div><label>Categoria</label><input id="categoria"></div><div><label>Valor</label><input type="number" id="valor" step="0.01"></div><div><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="outline" onclick="cancelarEdicao()">Cancelar</button></div></div></div><div class="tblfilters"><input id="pesquisa" placeholder="Pesquisar..." oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select><select id="filtroTipo" onchange="atualizar()"><option value="">Todos os tipos</option><option>Receita</option><option>Despesa</option></select><input type="date" id="filtroDataInicio" onchange="atualizar()"><input type="date" id="filtroDataFim" onchange="atualizar()"></div><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></div><div class="foot"><span id="paginacaoTexto"></span><div><button class="outline" onclick="paginaAnterior()">Anterior</button><button class="outline" onclick="proximaPagina()">Próxima</button></div></div></section>
-<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v4.1</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
+<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v4.2</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
 
 <div class="backup-restore-box">
   <h2>💾 Restaurar Backup JSON</h2>
@@ -436,7 +436,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 <button class="outline" onclick="window.print()">Imprimir / Salvar página como PDF</button>
 <p class="hint">Se deixar as datas em branco, o sistema usa o período filtrado no painel principal. Os gráficos serão capturados como imagem e inseridos no PDF.</p>
 </section>
-<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 4.1 Corrigida</footer></main>
+<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 4.2 Evolução Mensal</footer></main>
 <script>
 let lancamentos=JSON.parse(localStorage.getItem("lancamentos_orcamento"))||[],graficos={},paginaAtual=1;const porPagina=5,cores=["#1E88FF","#2ED063","#F6C21A","#8E44AD","#FF5733","#17A2B8","#AAB2BD"];
 function salvar(){localStorage.setItem("lancamentos_orcamento",JSON.stringify(lancamentos));atualizar()}function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}function dataBR(iso){if(!iso)return"";let[a,m,d]=iso.split("-");return`${d}/${m}/${a}`}function hoje(){return new Date().toISOString().slice(0,10)}
@@ -521,14 +521,64 @@ function desenharGraficos(lista,r,d){
   let rec=agrupar(lista,"Receita");
   atualizarPercentuais(rec,"percentuaisReceitas");
   let meses={};
-  lista.forEach(l=>{let m=l.data.slice(5,7);if(!meses[m])meses[m]={r:0,d:0};l.tipo==="Receita"?meses[m].r+=l.valor:meses[m].d+=l.valor});
-  let labels=Object.keys(meses).sort(), nomes=labels.map(m=>["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][Number(m)-1]);
+  lista.forEach(l=>{
+    if(!l.data || l.data.length < 7) return;
+    let chave=l.data.slice(0,7); // ano-mês, ex.: 2026-06
+    if(!meses[chave]) meses[chave]={r:0,d:0};
+    l.tipo==="Receita" ? meses[chave].r+=Number(l.valor||0) : meses[chave].d+=Number(l.valor||0);
+  });
+
+  let labels=Object.keys(meses).sort();
+  let nomes=labels.map(ch=>{
+    let ano=ch.slice(0,4), mes=Number(ch.slice(5,7));
+    let nomeMes=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][mes-1] || ch;
+    return nomeMes + "/" + ano.slice(2);
+  });
+
+  // Se houver apenas um mês, repete visualmente o ponto para o gráfico ficar legível.
+  let labelsGrafico = labels.length === 1 ? [labels[0], labels[0] + "-fim"] : labels;
+  let nomesGrafico = labels.length === 1 ? [nomes[0], nomes[0]] : nomes;
+  let receitasGrafico = labels.length === 1 ? [meses[labels[0]].r, meses[labels[0]].r] : labels.map(m=>meses[m].r);
+  let despesasGrafico = labels.length === 1 ? [meses[labels[0]].d, meses[labels[0]].d] : labels.map(m=>meses[m].d);
+
   chart("graficoEvolucao",{
     type:"line",
-    data:{labels:nomes,datasets:[
-      {label:"Receitas",data:labels.map(m=>meses[m].r),borderColor:"#2ED063",backgroundColor:"rgba(46,208,99,.18)",fill:true,tension:.25},
-      {label:"Despesas",data:labels.map(m=>meses[m].d),borderColor:"#FF3B3B",backgroundColor:"rgba(255,59,59,.18)",fill:true,tension:.25}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:function(c){return c.dataset.label+": "+moeda(c.raw||0);}}}}}
+    data:{labels:nomesGrafico,datasets:[
+      {
+        label:"Receitas",
+        data:receitasGrafico,
+        borderColor:"#2ED063",
+        backgroundColor:"rgba(46,208,99,.18)",
+        fill:true,
+        tension:.25,
+        pointRadius:6,
+        pointHoverRadius:8
+      },
+      {
+        label:"Despesas",
+        data:despesasGrafico,
+        borderColor:"#FF3B3B",
+        backgroundColor:"rgba(255,59,59,.18)",
+        fill:true,
+        tension:.25,
+        pointRadius:6,
+        pointHoverRadius:8
+      }
+    ]},
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      scales:{
+        y:{
+          beginAtZero:true,
+          ticks:{callback:function(value){return Number(value).toLocaleString("pt-BR");}}
+        }
+      },
+      plugins:{
+        tooltip:{callbacks:{label:function(c){return c.dataset.label+": "+moeda(c.raw||0);}}},
+        legend:{labels:{color:"#f4f7fb"}}
+      }
+    }
   });
 }
 function normalizarValor(v){if(v===undefined||v===null)return NaN;let s=String(v).trim().replace("R$","").replace(/\s/g,"");if(s.includes(",")&&s.includes("."))s=s.replace(/\./g,"").replace(",",".");else if(s.includes(","))s=s.replace(",",".");return parseFloat(s)}
