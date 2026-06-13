@@ -1,1 +1,3 @@
-# Controle Orçamento Doméstico v3.2\n\nImportação por arquivo CSV, TXT, XLSX e XLS, compatível com celular e computador.\n
+# Controle Orçamento Doméstico v3.4
+
+Versão com relatório PDF personalizado: período, resumo, gráficos e lançamentos selecionáveis.

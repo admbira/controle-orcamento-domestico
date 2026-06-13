@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Controle Orçamento Doméstico | Apoia+Empresarial</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<title>Controle Orçamento Doméstico v3.4 | Apoia+Empresarial</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js?v=3.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js?v=3.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js?v=3.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js?v=3.3"></script>
 <style>
 :root{--bg:#06182e;--p:#08264a;--b:#24476c;--y:#f6c21a;--g:#2ed063;--r:#ff3b3b;--az:#1e88ff;--t:#f4f7fb}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#0b315d,#06182e 45%,#04101f);color:var(--t);display:flex;min-height:100vh}
@@ -18,24 +18,65 @@ main{margin-left:250px;width:calc(100% - 250px);padding:20px}.card,.sum{backgrou
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}.sum{padding:22px;display:flex;justify-content:space-between;min-height:130px}.sum h3{text-transform:uppercase;margin:0 0 8px}.sum strong{font-size:32px}.inc h3,.inc strong{color:var(--g)}.des h3,.des strong{color:var(--r)}.sal h3,.sal strong{color:var(--az)}.lan h3,.lan strong{color:var(--y)}.ico{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--g)}.red{background:#d82e2e}.blue{background:#1a7be7}.gold{background:#f5b916}
 .filters,.tblfilters,.form{display:grid;gap:10px}.filters{grid-template-columns:1.3fr repeat(3,1fr) repeat(4,auto);padding:14px;margin-bottom:14px}.form{grid-template-columns:repeat(6,1fr)}.tblfilters{grid-template-columns:1.4fr 1fr 1fr .8fr .8fr;margin:12px 0}
 label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}input,select,textarea{width:100%;background:#071b36;border:1px solid #335779;color:white;border-radius:6px;padding:11px 12px}
-input[type=file]{background:#0a2a52;border:2px dashed #55789c;padding:16px}
+input[type=file]{background:#0a2a52;border:2px dashed #f6c21a;padding:18px;font-size:15px}
 button{background:linear-gradient(180deg,#ffd447,#e7ac15);border:0;color:#06182e;font-weight:800;border-radius:7px;padding:11px 15px;cursor:pointer}.outline{background:#071b36;color:white;border:1px solid #335779}.danger{background:linear-gradient(180deg,#ff5656,#d62929);color:white}
 .charts{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:14px;margin-bottom:14px}.chart{height:340px;padding:18px}.chart canvas{max-height:260px}h2{color:var(--y);margin:0 0 14px}
 .launch{padding:16px;margin-bottom:14px}.top{display:flex;justify-content:space-between}.entry{border:1px solid #fff1;border-radius:10px;padding:14px;margin:10px 0 16px;background:#0002}
-table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:1px solid #fff2;text-align:left}th{color:var(--y)}.badge{padding:7px 12px;border-radius:5px;color:white;font-weight:800}.receita{background:#24b85b}.despesa{background:#e63030}.vr{color:var(--g);font-weight:800}.vd{color:var(--r);font-weight:800}.acts{display:flex;gap:10px;flex-wrap:wrap}.foot{display:flex;justify-content:space-between;margin-top:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.two .card,.report{padding:18px;margin-bottom:14px}footer{text-align:center;color:#aab5c7;padding:20px}.hint{color:var(--y)}.status{margin-top:10px;color:var(--y);font-weight:bold}
+table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:1px solid #fff2;text-align:left}th{color:var(--y)}.badge{padding:7px 12px;border-radius:5px;color:white;font-weight:800}.receita{background:#24b85b}.despesa{background:#e63030}.vr{color:var(--g);font-weight:800}.vd{color:var(--r);font-weight:800}.acts{display:flex;gap:10px;flex-wrap:wrap}.foot{display:flex;justify-content:space-between;margin-top:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.two .card,.report{padding:18px;margin-bottom:14px}footer{text-align:center;color:#aab5c7;padding:20px}.hint{color:var(--y)}.status{margin-top:10px;color:var(--y);font-weight:bold}.ok{color:var(--g)}.import-box{border:1px dashed #55789c;border-radius:10px;padding:12px;background:#0002;margin:10px 0}.import-box label{display:block;margin:8px 0}
 @media(max-width:1100px){body{display:block}aside{position:relative;width:100%}.priv{position:static;margin-top:20px}main{margin:0;width:100%}.grid,.charts,.two,.filters,.form,.tblfilters{grid-template-columns:1fr}.chart{height:auto}}
-@media print{aside,.filters,.entry,.tblfilters,.foot,.report,button{display:none!important}main{margin:0;width:100%;padding:0}body{background:white;color:black}.card,.sum{background:white;color:black;border:1px solid #777;box-shadow:none}h2,h3,th,td,p,strong{color:black!important}}
 </style></head>
 <body>
-<aside><div class="logo"><svg viewBox="0 0 512 512"><polygon points="256,78 74,392 438,392" fill="#071b85"/><polygon points="256,205 180,392 332,392" fill="#ffd21f"/><circle cx="256" cy="205" r="33" fill="#fff"/></svg></div><div class="brand">Apoia<span>+</span>Empresarial</div><nav><a class="active" href="#dashboard">🏠 Dashboard</a><a href="#lancamentos">📋 Lançamentos</a><a href="#graficos">📊 Gráficos</a><a href="#importacao">📥 Importar/Exportar</a><a href="#relatorios">🖨️ Relatórios PDF</a></nav><div class="priv">🔒 Dados salvos apenas neste navegador.</div></aside>
+<aside><div class="logo"><svg viewBox="0 0 512 512"><polygon points="256,78 74,392 438,392" fill="#071b85"/><polygon points="256,205 180,392 332,392" fill="#ffd21f"/><circle cx="256" cy="205" r="33" fill="#fff"/></svg></div><div class="brand">Apoia<span>+</span>Empresarial</div><nav><a class="active" href="#dashboard">🏠 Dashboard</a><a href="#lancamentos">📋 Lançamentos</a><a href="#graficos">📊 Gráficos</a><a href="#importacao">📥 Importar Arquivo</a><a href="#relatorios">🖨️ Relatórios PDF</a></nav><div class="priv">🔒 Dados salvos apenas neste navegador.</div></aside>
 <main>
 <section id="dashboard" class="grid"><div class="sum inc"><div><h3>Receitas</h3><strong id="totalReceitas">R$ 0,00</strong><p>Total de entradas</p></div><span class="ico">↗</span></div><div class="sum des"><div><h3>Despesas</h3><strong id="totalDespesas">R$ 0,00</strong><p>Total de saídas</p></div><span class="ico red">↘</span></div><div class="sum sal"><div><h3>Saldo</h3><strong id="saldo">R$ 0,00</strong><p>Resultado</p></div><span class="ico blue">💼</span></div><div class="sum lan"><div><h3>Lançamentos</h3><strong id="qtdLancamentos">0</strong><p>Total</p></div><span class="ico gold">☷</span></div></section>
 <section class="filters card"><div><label>Nome</label><input id="nomeUsuario" placeholder="Digite seu nome"></div><div><label>Mês</label><input type="month" id="mesReferencia"></div><div><label>Data inicial</label><input type="date" id="dataInicial"></div><div><label>Data final</label><input type="date" id="dataFinal"></div><button onclick="filtrarPeriodo()">Filtrar</button><button onclick="mesAtual()">Mês atual</button><button onclick="ultimosTresMeses()">Últimos 3 meses</button><button onclick="esteAno()">Este ano</button></section>
 <section id="graficos" class="charts"><div class="card chart"><h2>Receitas x Despesas</h2><canvas id="graficoResumo"></canvas></div><div class="card chart"><h2>Despesas por Categoria</h2><canvas id="graficoDespesas"></canvas></div><div class="card chart"><h2>Evolução Mensal</h2><canvas id="graficoEvolucao"></canvas></div></section>
 <section id="lancamentos" class="card launch"><div class="top"><h2>Lançamentos</h2><button onclick="prepararNovo()">+ Novo Lançamento</button></div><div id="formWrapper" class="entry"><h3 id="tituloFormulario">Novo lançamento</h3><input type="hidden" id="editandoId"><div class="form"><div><label>Data</label><input type="date" id="data"></div><div><label>Descrição</label><input id="descricao"></div><div><label>Tipo</label><select id="tipo"><option>Receita</option><option>Despesa</option></select></div><div><label>Categoria</label><input id="categoria"></div><div><label>Valor</label><input type="number" id="valor" step="0.01"></div><div><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="outline" onclick="cancelarEdicao()">Cancelar</button></div></div></div><div class="tblfilters"><input id="pesquisa" placeholder="Pesquisar..." oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select><select id="filtroTipo" onchange="atualizar()"><option value="">Todos os tipos</option><option>Receita</option><option>Despesa</option></select><input type="date" id="filtroDataInicio" onchange="atualizar()"><input type="date" id="filtroDataFim" onchange="atualizar()"></div><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></div><div class="foot"><span id="paginacaoTexto"></span><div><button class="outline" onclick="paginaAnterior()">Anterior</button><button class="outline" onclick="proximaPagina()">Próxima</button></div></div></section>
-<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel</h2><label>Selecione CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">Colunas esperadas: data; descrição; tipo; categoria; valor. Também funciona no celular.</p><div id="statusImportacao" class="status"></div><h2>Importar por texto</h2><textarea id="importTexto" rows="8" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
-<section id="relatorios" class="card report"><h2>Relatórios PDF</h2><p>Gere relatório em PDF com resumo financeiro e lançamentos filtrados.</p><button onclick="gerarRelatorioPDF()">Gerar Relatório PDF</button> <button class="outline" onclick="window.print()">Imprimir / Salvar como PDF</button><p class="hint">Se o navegador bloquear, libere downloads/pop-ups para este site.</p></section>
-<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 3.2 Importação</footer></main>
+<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v3.3</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
+<section id="relatorios" class="card report">
+<h2>Relatórios PDF</h2>
+<p>Escolha o período e o que deseja incluir no relatório.</p>
+
+<div class="two" style="grid-template-columns:1fr 1fr; margin-bottom:12px">
+  <div>
+    <label>Data inicial do relatório</label>
+    <input type="date" id="relDataInicio">
+  </div>
+  <div>
+    <label>Data final do relatório</label>
+    <input type="date" id="relDataFim">
+  </div>
+</div>
+
+<div class="two" style="grid-template-columns:1fr 1fr; margin-bottom:12px">
+  <div>
+    <label>Tipo</label>
+    <select id="relTipo">
+      <option value="">Todos os tipos</option>
+      <option>Receita</option>
+      <option>Despesa</option>
+    </select>
+  </div>
+  <div>
+    <label>Categoria</label>
+    <select id="relCategoria">
+      <option value="">Todas as categorias</option>
+    </select>
+  </div>
+</div>
+
+<div class="import-box">
+  <label><input type="checkbox" id="relResumo" checked style="width:auto"> Incluir resumo financeiro</label>
+  <label><input type="checkbox" id="relGraficos" checked style="width:auto"> Incluir gráficos</label>
+  <label><input type="checkbox" id="relLancamentos" checked style="width:auto"> Incluir lançamentos</label>
+</div>
+
+<button onclick="gerarRelatorioPDF()">Gerar PDF selecionado</button>
+<button onclick="marcarRelatorioCompleto()">Selecionar tudo</button>
+<button class="outline" onclick="window.print()">Imprimir / Salvar página como PDF</button>
+<p class="hint">Se deixar as datas em branco, o sistema usa o período filtrado no painel principal. Os gráficos são salvos como imagens no PDF.</p>
+</section>
+<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 3.4 Relatório Completo</footer></main>
 <script>
 let lancamentos=JSON.parse(localStorage.getItem("lancamentos_orcamento"))||[],graficos={},paginaAtual=1;const porPagina=5,cores=["#1E88FF","#2ED063","#F6C21A","#8E44AD","#FF5733","#17A2B8","#AAB2BD"];
 function salvar(){localStorage.setItem("lancamentos_orcamento",JSON.stringify(lancamentos));atualizar()}function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}function dataBR(iso){if(!iso)return"";let[a,m,d]=iso.split("-");return`${d}/${m}/${a}`}function hoje(){return new Date().toISOString().slice(0,10)}
@@ -58,5 +99,162 @@ function importarLinhas(linhas){let n=0;linhas.forEach((p,i)=>{if(!p||p.length<5
 function importarTexto(){let txt=importTexto.value.trim();if(!txt)return alert("Cole uma lista para importar.");importarLinhas(txt.split(/\n/).map(l=>l.split(";")));importTexto.value=""}
 function importarArquivoSelecionado(){let arq=arquivoImportacao.files[0];if(!arq)return;statusImportacao.textContent="Lendo arquivo...";let ext=arq.name.split(".").pop().toLowerCase();if(["xlsx","xls"].includes(ext)){if(!window.XLSX)return alert("Biblioteca Excel não carregou. Verifique a internet.");let reader=new FileReader();reader.onload=e=>{let data=new Uint8Array(e.target.result),wb=XLSX.read(data,{type:"array",cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]],linhas=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:"yyyy-mm-dd"});importarLinhas(linhas)};reader.readAsArrayBuffer(arq)}else{let reader=new FileReader();reader.onload=e=>{let txt=e.target.result,delim=txt.includes(";")?";":",";importarLinhas(txt.split(/\r?\n/).filter(Boolean).map(l=>l.split(delim)))};reader.readAsText(arq,"UTF-8")}}
 function exportarCSV(){let linhas=["data;descricao;tipo;categoria;valor",...lancamentos.map(l=>`${l.data};${l.descricao};${l.tipo};${l.categoria};${l.valor}`)],blob=new Blob([linhas.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="orcamento-domestico.csv";a.click()}function baixarBackup(){let blob=new Blob([JSON.stringify(lancamentos,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup-orcamento-domestico.json";a.click()}function limparDados(){if(confirm("Apagar todos os lançamentos deste navegador?")){lancamentos=[];salvar()}}
-function gerarRelatorioPDF(){if(!window.jspdf||!window.jspdf.jsPDF)return alert("Biblioteca PDF não carregou. Use Imprimir / Salvar como PDF.");const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"}),lista=aplicarFiltrosTabela(periodoFiltrado()),r=lista.filter(l=>l.tipo==="Receita").reduce((s,l)=>s+l.valor,0),d=lista.filter(l=>l.tipo==="Despesa").reduce((s,l)=>s+l.valor,0),s=r-d,nome=localStorage.getItem("nomeUsuario")||nomeUsuario.value||"Usuário";doc.setFillColor(6,24,46);doc.rect(0,0,210,28,"F");doc.setTextColor(246,194,26);doc.setFontSize(16);doc.text("CONTROLE ORÇAMENTO DOMÉSTICO",14,12);doc.setTextColor(255,255,255);doc.setFontSize(10);doc.text("Apoia+Empresarial • Relatório financeiro",14,19);doc.setTextColor(0,0,0);doc.setFontSize(11);doc.text(`Nome: ${nome}`,14,38);doc.text(`Data: ${new Date().toLocaleDateString("pt-BR")}`,14,45);doc.text(`Lançamentos: ${lista.length}`,14,52);doc.setFontSize(12);doc.text(`Receitas: ${moeda(r)}`,14,65);doc.text(`Despesas: ${moeda(d)}`,75,65);doc.text(`Saldo: ${moeda(s)}`,140,65);let rows=lista.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(l=>[dataBR(l.data),l.descricao,l.tipo,l.categoria,(l.tipo==="Receita"?"+ ":"- ")+moeda(l.valor)]);doc.autoTable({startY:75,head:[["Data","Descrição","Tipo","Categoria","Valor"]],body:rows,styles:{fontSize:8,cellPadding:2},headStyles:{fillColor:[6,24,46],textColor:[246,194,26]},alternateRowStyles:{fillColor:[240,245,250]},columnStyles:{4:{halign:"right"}},margin:{left:10,right:10}});doc.save("relatorio-orcamento-domestico.pdf")}
+function marcarRelatorioCompleto(){
+  relResumo.checked = true;
+  relGraficos.checked = true;
+  relLancamentos.checked = true;
+}
+
+function listaParaRelatorio(){
+  let lista = lancamentos.slice();
+
+  const rIni = relDataInicio.value;
+  const rFim = relDataFim.value;
+  const rTipo = relTipo.value;
+  const rCat = relCategoria.value;
+
+  if(rIni || rFim){
+    lista = lista.filter(l => (!rIni || l.data >= rIni) && (!rFim || l.data <= rFim));
+  } else {
+    lista = periodoFiltrado();
+  }
+
+  lista = lista.filter(l =>
+    (!rTipo || l.tipo === rTipo) &&
+    (!rCat || l.categoria === rCat)
+  );
+
+  return lista;
+}
+
+function atualizarCategoriasRelatorio(){
+  const select = document.getElementById("relCategoria");
+  if(!select) return;
+
+  const atual = select.value;
+  const cats = [...new Set(lancamentos.map(l => l.categoria).filter(Boolean))].sort();
+
+  select.innerHTML = '<option value="">Todas as categorias</option>' +
+    cats.map(c => `<option value="${c}">${c}</option>`).join("");
+
+  if(cats.includes(atual)) select.value = atual;
+}
+
+function addChartToPDF(doc, canvasId, titulo, x, y, w){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return y;
+
+  try{
+    const img = canvas.toDataURL("image/png", 1.0);
+    doc.setTextColor(6,24,46);
+    doc.setFontSize(11);
+    doc.text(titulo, x, y);
+    doc.addImage(img, "PNG", x, y + 4, w, 55);
+    return y + 66;
+  }catch(e){
+    doc.setTextColor(200,0,0);
+    doc.text("Não foi possível inserir o gráfico: " + titulo, x, y);
+    return y + 8;
+  }
+}
+
+function gerarRelatorioPDF(){
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    alert("Biblioteca PDF não carregou. Use Imprimir / Salvar como PDF.");
+    return;
+  }
+
+  atualizarCategoriasRelatorio();
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:"portrait", unit:"mm", format:"a4"});
+
+  const lista = listaParaRelatorio();
+  const receitas = lista.filter(l=>l.tipo==="Receita").reduce((s,l)=>s+l.valor,0);
+  const despesas = lista.filter(l=>l.tipo==="Despesa").reduce((s,l)=>s+l.valor,0);
+  const saldo = receitas - despesas;
+  const nome = localStorage.getItem("nomeUsuario") || nomeUsuario.value || "Usuário";
+
+  doc.setFillColor(6,24,46);
+  doc.rect(0,0,210,30,"F");
+  doc.setTextColor(246,194,26);
+  doc.setFontSize(16);
+  doc.text("CONTROLE ORÇAMENTO DOMÉSTICO",14,12);
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(10);
+  doc.text("Apoia+Empresarial • Relatório financeiro personalizado",14,20);
+
+  doc.setTextColor(0,0,0);
+  doc.setFontSize(10);
+  doc.text(`Nome: ${nome}`,14,40);
+  doc.text(`Data do relatório: ${new Date().toLocaleDateString("pt-BR")}`,14,46);
+  doc.text(`Lançamentos selecionados: ${lista.length}`,14,52);
+
+  let periodoTxt = "Período: ";
+  if(relDataInicio.value || relDataFim.value){
+    periodoTxt += `${relDataInicio.value ? dataBR(relDataInicio.value) : "início"} até ${relDataFim.value ? dataBR(relDataFim.value) : "fim"}`;
+  } else {
+    periodoTxt += "filtro principal do painel";
+  }
+  doc.text(periodoTxt,14,58);
+
+  let y = 70;
+
+  if(relResumo.checked){
+    doc.setFontSize(12);
+    doc.setTextColor(0,110,60);
+    doc.text(`Receitas: ${moeda(receitas)}`,14,y);
+    doc.setTextColor(200,30,30);
+    doc.text(`Despesas: ${moeda(despesas)}`,75,y);
+    doc.setTextColor(saldo >= 0 ? 0 : 200, saldo >= 0 ? 100 : 30, saldo >= 0 ? 60 : 30);
+    doc.text(`Saldo: ${moeda(saldo)}`,140,y);
+    y += 14;
+  }
+
+  if(relGraficos.checked){
+    // Garante que os gráficos estejam desenhados com o período principal.
+    // Os gráficos visuais do painel serão capturados como imagem.
+    if(y > 235){ doc.addPage(); y = 20; }
+    y = addChartToPDF(doc, "graficoResumo", "Gráfico: Receitas x Despesas", 14, y, 85);
+    if(y > 225){ doc.addPage(); y = 20; }
+    y = addChartToPDF(doc, "graficoDespesas", "Gráfico: Despesas por Categoria", 14, y, 85);
+    if(y > 225){ doc.addPage(); y = 20; }
+    y = addChartToPDF(doc, "graficoEvolucao", "Gráfico: Evolução Mensal", 14, y, 170);
+    y += 4;
+  }
+
+  if(relLancamentos.checked){
+    if(y > 245){ doc.addPage(); y = 20; }
+
+    const rows = lista
+      .slice()
+      .sort((a,b)=>a.data.localeCompare(b.data))
+      .map(l=>[
+        dataBR(l.data),
+        l.descricao,
+        l.tipo,
+        l.categoria,
+        (l.tipo==="Receita" ? "+ " : "- ") + moeda(l.valor)
+      ]);
+
+    doc.autoTable({
+      startY: y,
+      head: [["Data","Descrição","Tipo","Categoria","Valor"]],
+      body: rows,
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [6,24,46], textColor: [246,194,26] },
+      alternateRowStyles: { fillColor: [240,245,250] },
+      columnStyles: { 4: { halign: "right" } },
+      margin: { left: 10, right: 10 }
+    });
+  }
+
+  doc.save("relatorio-orcamento-domestico-personalizado.pdf");
+}
+
+const atualizarOriginal = atualizar;
+atualizar = function(){
+  atualizarOriginal();
+  atualizarCategoriasRelatorio();
+};
 </script></body></html>
