@@ -1,8 +1,10 @@
-# Controle Orçamento Doméstico v4.2
+# Controle Orçamento Doméstico v4.3
 
-Correção:
-- Gráfico de Evolução Mensal agrupando por mês/ano.
-- Melhor visual quando existe apenas um mês no período.
-- Pontos maiores e eixo iniciado em zero.
+Correção do relatório PDF:
+- PDF em A4 paisagem para evitar cortes.
+- Percentuais dentro da área de impressão.
+- Tabelas com largura fixa e quebra automática.
+- Gráficos redimensionados para caber na página.
+- Lançamentos em página separada.
 
 Substitua os arquivos no GitHub e pressione Ctrl + F5.
