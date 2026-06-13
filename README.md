@@ -1,3 +1,3 @@
-# Controle Orçamento Doméstico v3.4
+# Controle Orçamento Doméstico v3.5
 
-Versão com relatório PDF personalizado: período, resumo, gráficos e lançamentos selecionáveis.
+Correção do botão Gerar Relatório PDF para incluir gráficos capturados do canvas.
