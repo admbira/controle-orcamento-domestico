@@ -3,12 +3,382 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Controle Orçamento Doméstico v3.5 | Apoia+Empresarial</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js?v=3.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js?v=3.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js?v=3.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js?v=3.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<title>Controle Orçamento Doméstico v3.7 | Apoia+Empresarial</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js?v=3.3">
+function restaurarBackupJSON(){
+  const input = document.getElementById("arquivoBackupJson");
+  const status = document.getElementById("statusBackupJson");
+
+  if(!input || !input.files || !input.files[0]){
+    alert("Selecione um arquivo de backup JSON.");
+    return;
+  }
+
+  const arquivo = input.files[0];
+
+  if(!arquivo.name.toLowerCase().endsWith(".json")){
+    alert("Selecione um arquivo com extensão .json.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    try{
+      const dados = JSON.parse(e.target.result);
+
+      if(!Array.isArray(dados)){
+        throw new Error("O arquivo não contém uma lista de lançamentos.");
+      }
+
+      const restaurados = dados.map((l, index) => {
+        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
+          throw new Error("Estrutura inválida na linha " + (index + 1));
+        }
+
+        return {
+          id: l.id || Date.now() + index,
+          data: String(l.data).slice(0,10),
+          descricao: String(l.descricao),
+          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          categoria: String(l.categoria || "Outros"),
+          valor: Number(l.valor)
+        };
+      });
+
+      if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
+        return;
+      }
+
+      lancamentos = restaurados;
+      localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
+
+      if(typeof paginaAtual !== "undefined"){
+        paginaAtual = 1;
+      }
+
+      if(typeof atualizar === "function"){
+        atualizar();
+      }
+
+      if(status){
+        status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
+      }
+
+      alert("Backup restaurado com sucesso! " + restaurados.length + " lançamentos recuperados.");
+    }catch(err){
+      console.error(err);
+      alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
+      if(status){
+        status.textContent = "Erro ao restaurar backup JSON.";
+      }
+    }
+  };
+
+  leitor.readAsText(arquivo, "UTF-8");
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js?v=3.3">
+function restaurarBackupJSON(){
+  const input = document.getElementById("arquivoBackupJson");
+  const status = document.getElementById("statusBackupJson");
+
+  if(!input || !input.files || !input.files[0]){
+    alert("Selecione um arquivo de backup JSON.");
+    return;
+  }
+
+  const arquivo = input.files[0];
+
+  if(!arquivo.name.toLowerCase().endsWith(".json")){
+    alert("Selecione um arquivo com extensão .json.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    try{
+      const dados = JSON.parse(e.target.result);
+
+      if(!Array.isArray(dados)){
+        throw new Error("O arquivo não contém uma lista de lançamentos.");
+      }
+
+      const restaurados = dados.map((l, index) => {
+        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
+          throw new Error("Estrutura inválida na linha " + (index + 1));
+        }
+
+        return {
+          id: l.id || Date.now() + index,
+          data: String(l.data).slice(0,10),
+          descricao: String(l.descricao),
+          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          categoria: String(l.categoria || "Outros"),
+          valor: Number(l.valor)
+        };
+      });
+
+      if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
+        return;
+      }
+
+      lancamentos = restaurados;
+      localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
+
+      if(typeof paginaAtual !== "undefined"){
+        paginaAtual = 1;
+      }
+
+      if(typeof atualizar === "function"){
+        atualizar();
+      }
+
+      if(status){
+        status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
+      }
+
+      alert("Backup restaurado com sucesso! " + restaurados.length + " lançamentos recuperados.");
+    }catch(err){
+      console.error(err);
+      alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
+      if(status){
+        status.textContent = "Erro ao restaurar backup JSON.";
+      }
+    }
+  };
+
+  leitor.readAsText(arquivo, "UTF-8");
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js?v=3.3">
+function restaurarBackupJSON(){
+  const input = document.getElementById("arquivoBackupJson");
+  const status = document.getElementById("statusBackupJson");
+
+  if(!input || !input.files || !input.files[0]){
+    alert("Selecione um arquivo de backup JSON.");
+    return;
+  }
+
+  const arquivo = input.files[0];
+
+  if(!arquivo.name.toLowerCase().endsWith(".json")){
+    alert("Selecione um arquivo com extensão .json.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    try{
+      const dados = JSON.parse(e.target.result);
+
+      if(!Array.isArray(dados)){
+        throw new Error("O arquivo não contém uma lista de lançamentos.");
+      }
+
+      const restaurados = dados.map((l, index) => {
+        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
+          throw new Error("Estrutura inválida na linha " + (index + 1));
+        }
+
+        return {
+          id: l.id || Date.now() + index,
+          data: String(l.data).slice(0,10),
+          descricao: String(l.descricao),
+          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          categoria: String(l.categoria || "Outros"),
+          valor: Number(l.valor)
+        };
+      });
+
+      if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
+        return;
+      }
+
+      lancamentos = restaurados;
+      localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
+
+      if(typeof paginaAtual !== "undefined"){
+        paginaAtual = 1;
+      }
+
+      if(typeof atualizar === "function"){
+        atualizar();
+      }
+
+      if(status){
+        status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
+      }
+
+      alert("Backup restaurado com sucesso! " + restaurados.length + " lançamentos recuperados.");
+    }catch(err){
+      console.error(err);
+      alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
+      if(status){
+        status.textContent = "Erro ao restaurar backup JSON.";
+      }
+    }
+  };
+
+  leitor.readAsText(arquivo, "UTF-8");
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js?v=3.3">
+function restaurarBackupJSON(){
+  const input = document.getElementById("arquivoBackupJson");
+  const status = document.getElementById("statusBackupJson");
+
+  if(!input || !input.files || !input.files[0]){
+    alert("Selecione um arquivo de backup JSON.");
+    return;
+  }
+
+  const arquivo = input.files[0];
+
+  if(!arquivo.name.toLowerCase().endsWith(".json")){
+    alert("Selecione um arquivo com extensão .json.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    try{
+      const dados = JSON.parse(e.target.result);
+
+      if(!Array.isArray(dados)){
+        throw new Error("O arquivo não contém uma lista de lançamentos.");
+      }
+
+      const restaurados = dados.map((l, index) => {
+        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
+          throw new Error("Estrutura inválida na linha " + (index + 1));
+        }
+
+        return {
+          id: l.id || Date.now() + index,
+          data: String(l.data).slice(0,10),
+          descricao: String(l.descricao),
+          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          categoria: String(l.categoria || "Outros"),
+          valor: Number(l.valor)
+        };
+      });
+
+      if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
+        return;
+      }
+
+      lancamentos = restaurados;
+      localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
+
+      if(typeof paginaAtual !== "undefined"){
+        paginaAtual = 1;
+      }
+
+      if(typeof atualizar === "function"){
+        atualizar();
+      }
+
+      if(status){
+        status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
+      }
+
+      alert("Backup restaurado com sucesso! " + restaurados.length + " lançamentos recuperados.");
+    }catch(err){
+      console.error(err);
+      alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
+      if(status){
+        status.textContent = "Erro ao restaurar backup JSON.";
+      }
+    }
+  };
+
+  leitor.readAsText(arquivo, "UTF-8");
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js">
+function restaurarBackupJSON(){
+  const input = document.getElementById("arquivoBackupJson");
+  const status = document.getElementById("statusBackupJson");
+
+  if(!input || !input.files || !input.files[0]){
+    alert("Selecione um arquivo de backup JSON.");
+    return;
+  }
+
+  const arquivo = input.files[0];
+
+  if(!arquivo.name.toLowerCase().endsWith(".json")){
+    alert("Selecione um arquivo com extensão .json.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    try{
+      const dados = JSON.parse(e.target.result);
+
+      if(!Array.isArray(dados)){
+        throw new Error("O arquivo não contém uma lista de lançamentos.");
+      }
+
+      const restaurados = dados.map((l, index) => {
+        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
+          throw new Error("Estrutura inválida na linha " + (index + 1));
+        }
+
+        return {
+          id: l.id || Date.now() + index,
+          data: String(l.data).slice(0,10),
+          descricao: String(l.descricao),
+          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          categoria: String(l.categoria || "Outros"),
+          valor: Number(l.valor)
+        };
+      });
+
+      if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
+        return;
+      }
+
+      lancamentos = restaurados;
+      localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
+
+      if(typeof paginaAtual !== "undefined"){
+        paginaAtual = 1;
+      }
+
+      if(typeof atualizar === "function"){
+        atualizar();
+      }
+
+      if(status){
+        status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
+      }
+
+      alert("Backup restaurado com sucesso! " + restaurados.length + " lançamentos recuperados.");
+    }catch(err){
+      console.error(err);
+      alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
+      if(status){
+        status.textContent = "Erro ao restaurar backup JSON.";
+      }
+    }
+  };
+
+  leitor.readAsText(arquivo, "UTF-8");
+}
+
+</script>
 <style>
 :root{--bg:#06182e;--p:#08264a;--b:#24476c;--y:#f6c21a;--g:#2ed063;--r:#ff3b3b;--az:#1e88ff;--t:#f4f7fb}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#0b315d,#06182e 45%,#04101f);color:var(--t);display:flex;min-height:100vh}
@@ -25,6 +395,11 @@ button{background:linear-gradient(180deg,#ffd447,#e7ac15);border:0;color:#06182e
 .launch{padding:16px;margin-bottom:14px}.top{display:flex;justify-content:space-between}.entry{border:1px solid #fff1;border-radius:10px;padding:14px;margin:10px 0 16px;background:#0002}
 table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:1px solid #fff2;text-align:left}th{color:var(--y)}.badge{padding:7px 12px;border-radius:5px;color:white;font-weight:800}.receita{background:#24b85b}.despesa{background:#e63030}.vr{color:var(--g);font-weight:800}.vd{color:var(--r);font-weight:800}.acts{display:flex;gap:10px;flex-wrap:wrap}.foot{display:flex;justify-content:space-between;margin-top:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.two .card,.report{padding:18px;margin-bottom:14px}footer{text-align:center;color:#aab5c7;padding:20px}.hint{color:var(--y)}.status{margin-top:10px;color:var(--y);font-weight:bold}.ok{color:var(--g)}.import-box{border:1px dashed #55789c;border-radius:10px;padding:12px;background:#0002;margin:10px 0}.import-box label{display:block;margin:8px 0}
 @media(max-width:1100px){body{display:block}aside{position:relative;width:100%}.priv{position:static;margin-top:20px}main{margin:0;width:100%}.grid,.charts,.two,.filters,.form,.tblfilters{grid-template-columns:1fr}.chart{height:auto}}
+
+.backup-restore-box{border:2px dashed #f6c21a;border-radius:10px;padding:14px;margin:16px 0;background:rgba(246,194,26,.08)}
+.backup-restore-box h2{margin-top:0}
+.backup-restore-box input[type=file]{border:2px dashed #f6c21a;background:#0a2a52;padding:16px}
+.backup-restore-box .status{color:#f6c21a;font-weight:bold;margin-top:10px}
 </style></head>
 <body>
 <aside><div class="logo"><svg viewBox="0 0 512 512"><polygon points="256,78 74,392 438,392" fill="#071b85"/><polygon points="256,205 180,392 332,392" fill="#ffd21f"/><circle cx="256" cy="205" r="33" fill="#fff"/></svg></div><div class="brand">Apoia<span>+</span>Empresarial</div><nav><a class="active" href="#dashboard">🏠 Dashboard</a><a href="#lancamentos">📋 Lançamentos</a><a href="#graficos">📊 Gráficos</a><a href="#importacao">📥 Importar Arquivo</a><a href="#relatorios">🖨️ Relatórios PDF</a></nav><div class="priv">🔒 Dados salvos apenas neste navegador.</div></aside>
@@ -33,7 +408,17 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 <section class="filters card"><div><label>Nome</label><input id="nomeUsuario" placeholder="Digite seu nome"></div><div><label>Mês</label><input type="month" id="mesReferencia"></div><div><label>Data inicial</label><input type="date" id="dataInicial"></div><div><label>Data final</label><input type="date" id="dataFinal"></div><button onclick="filtrarPeriodo()">Filtrar</button><button onclick="mesAtual()">Mês atual</button><button onclick="ultimosTresMeses()">Últimos 3 meses</button><button onclick="esteAno()">Este ano</button></section>
 <section id="graficos" class="charts"><div class="card chart"><h2>Receitas x Despesas</h2><canvas id="graficoResumo"></canvas></div><div class="card chart"><h2>Despesas por Categoria</h2><canvas id="graficoDespesas"></canvas></div><div class="card chart"><h2>Evolução Mensal</h2><canvas id="graficoEvolucao"></canvas></div></section>
 <section id="lancamentos" class="card launch"><div class="top"><h2>Lançamentos</h2><button onclick="prepararNovo()">+ Novo Lançamento</button></div><div id="formWrapper" class="entry"><h3 id="tituloFormulario">Novo lançamento</h3><input type="hidden" id="editandoId"><div class="form"><div><label>Data</label><input type="date" id="data"></div><div><label>Descrição</label><input id="descricao"></div><div><label>Tipo</label><select id="tipo"><option>Receita</option><option>Despesa</option></select></div><div><label>Categoria</label><input id="categoria"></div><div><label>Valor</label><input type="number" id="valor" step="0.01"></div><div><button id="btnSalvar" onclick="salvarLancamento()">Adicionar</button><button class="outline" onclick="cancelarEdicao()">Cancelar</button></div></div></div><div class="tblfilters"><input id="pesquisa" placeholder="Pesquisar..." oninput="atualizar()"><select id="filtroCategoria" onchange="atualizar()"><option value="">Todas as categorias</option></select><select id="filtroTipo" onchange="atualizar()"><option value="">Todos os tipos</option><option>Receita</option><option>Despesa</option></select><input type="date" id="filtroDataInicio" onchange="atualizar()"><input type="date" id="filtroDataFim" onchange="atualizar()"></div><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="tabelaLancamentos"></tbody></table></div><div class="foot"><span id="paginacaoTexto"></span><div><button class="outline" onclick="paginaAnterior()">Anterior</button><button class="outline" onclick="proximaPagina()">Próxima</button></div></div></section>
-<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v3.3</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <input type="file" id="arquivoBackup" accept=".json" style="max-width:220px"> <button onclick="restaurarBackup()">Restaurar Backup</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
+<section id="importacao" class="two"><div class="card"><h2>Importar Arquivo CSV/Excel — v3.7</h2><label>Escolha um arquivo CSV, TXT, XLSX ou XLS</label><input type="file" id="arquivoImportacao" accept=".csv,.txt,.xlsx,.xls" onchange="importarArquivoSelecionado()"><p class="hint">No celular, toque em “Escolher arquivo”. No computador, selecione o arquivo. Colunas: data, descrição, tipo, categoria e valor.</p><div id="statusImportacao" class="status"></div><hr><h2>Importar por texto (opcional)</h2><textarea id="importTexto" rows="6" placeholder="2026-06-01;Salário;Receita;Salário;5000"></textarea><button onclick="importarTexto()">Importar texto colado</button></div><div class="card"><h2>Exportar e Backup</h2><button onclick="exportarCSV()">Exportar CSV</button> <button onclick="baixarBackup()">Backup JSON</button> <button class="danger" onclick="limparDados()">Limpar dados</button></div></section>
+
+<div class="backup-restore-box">
+  <h2>💾 Restaurar Backup JSON</h2>
+  <p class="hint">Use esta opção somente para arquivos gerados pelo botão <strong>Backup JSON</strong>. Isso é diferente de importar CSV/Excel.</p>
+  <label>Selecionar arquivo de backup (.json)</label>
+  <input type="file" id="arquivoBackupJson" accept=".json">
+  <button onclick="restaurarBackupJSON()">Restaurar Backup JSON</button>
+  <div id="statusBackupJson" class="status"></div>
+</div>
+
 <section id="relatorios" class="card report">
 <h2>Relatórios PDF</h2>
 <p>Escolha o período e o que deseja incluir no relatório.</p>
@@ -77,7 +462,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:
 <button class="outline" onclick="window.print()">Imprimir / Salvar página como PDF</button>
 <p class="hint">Se deixar as datas em branco, o sistema usa o período filtrado no painel principal. Os gráficos serão capturados como imagem e inseridos no PDF.</p>
 </section>
-<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 3.6 Backup JSON</footer></main>
+<footer>Apoia+Empresarial • Controle de Orçamento Doméstico • Versão 3.7 Backup JSON</footer></main>
 <script>
 let lancamentos=JSON.parse(localStorage.getItem("lancamentos_orcamento"))||[],graficos={},paginaAtual=1;const porPagina=5,cores=["#1E88FF","#2ED063","#F6C21A","#8E44AD","#FF5733","#17A2B8","#AAB2BD"];
 function salvar(){localStorage.setItem("lancamentos_orcamento",JSON.stringify(lancamentos));atualizar()}function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}function dataBR(iso){if(!iso)return"";let[a,m,d]=iso.split("-");return`${d}/${m}/${a}`}function hoje(){return new Date().toISOString().slice(0,10)}
@@ -99,26 +484,6 @@ function normalizarData(v){if(!v)return"";if(v instanceof Date&&!isNaN(v))return
 function importarLinhas(linhas){let n=0;linhas.forEach((p,i)=>{if(!p||p.length<5)return;if(i===0&&String(p[0]).toLowerCase().includes("data"))return;let valor=normalizarValor(p[4]),tp=String(p[2]||"").trim().toLowerCase().startsWith("r")?"Receita":"Despesa",dt=normalizarData(p[0]);if(dt&&!isNaN(valor)){lancamentos.push({id:Date.now()+Math.floor(Math.random()*1000000),data:dt,descricao:String(p[1]||"").trim()||"Lançamento",tipo:tp,categoria:String(p[3]||"Outros").trim()||"Outros",valor});n++}});paginaAtual=1;salvar();statusImportacao.textContent=n+" lançamentos importados.";alert(n+" lançamentos importados.")}
 function importarTexto(){let txt=importTexto.value.trim();if(!txt)return alert("Cole uma lista para importar.");importarLinhas(txt.split(/\n/).map(l=>l.split(";")));importTexto.value=""}
 function importarArquivoSelecionado(){let arq=arquivoImportacao.files[0];if(!arq)return;statusImportacao.textContent="Lendo arquivo...";let ext=arq.name.split(".").pop().toLowerCase();if(["xlsx","xls"].includes(ext)){if(!window.XLSX)return alert("Biblioteca Excel não carregou. Verifique a internet.");let reader=new FileReader();reader.onload=e=>{let data=new Uint8Array(e.target.result),wb=XLSX.read(data,{type:"array",cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]],linhas=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:"yyyy-mm-dd"});importarLinhas(linhas)};reader.readAsArrayBuffer(arq)}else{let reader=new FileReader();reader.onload=e=>{let txt=e.target.result,delim=txt.includes(";")?";":",";importarLinhas(txt.split(/\r?\n/).filter(Boolean).map(l=>l.split(delim)))};reader.readAsText(arq,"UTF-8")}}
-
-function restaurarBackup(){
- const arquivo=document.getElementById('arquivoBackup').files[0];
- if(!arquivo){alert('Selecione um arquivo JSON.');return;}
- const leitor=new FileReader();
- leitor.onload=function(e){
-   try{
-     const dados=JSON.parse(e.target.result);
-     if(!Array.isArray(dados)) throw new Error();
-     if(!confirm('Substituir os lançamentos atuais pelo backup?')) return;
-     lancamentos=dados;
-     localStorage.setItem('lancamentos_orcamento',JSON.stringify(lancamentos));
-     atualizar();
-     alert('Backup restaurado com sucesso!');
-   }catch(err){
-     alert('Arquivo JSON inválido.');
-   }
- };
- leitor.readAsText(arquivo);
-}
 function exportarCSV(){let linhas=["data;descricao;tipo;categoria;valor",...lancamentos.map(l=>`${l.data};${l.descricao};${l.tipo};${l.categoria};${l.valor}`)],blob=new Blob([linhas.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="orcamento-domestico.csv";a.click()}function baixarBackup(){let blob=new Blob([JSON.stringify(lancamentos,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup-orcamento-domestico.json";a.click()}function limparDados(){if(confirm("Apagar todos os lançamentos deste navegador?")){lancamentos=[];salvar()}}
 function marcarRelatorioCompleto(){
   relResumo.checked = true;
@@ -374,4 +739,78 @@ atualizar = function(){
   atualizarOriginal();
   atualizarCategoriasRelatorio();
 };
+
+function restaurarBackupJSON(){
+  const input = document.getElementById("arquivoBackupJson");
+  const status = document.getElementById("statusBackupJson");
+
+  if(!input || !input.files || !input.files[0]){
+    alert("Selecione um arquivo de backup JSON.");
+    return;
+  }
+
+  const arquivo = input.files[0];
+
+  if(!arquivo.name.toLowerCase().endsWith(".json")){
+    alert("Selecione um arquivo com extensão .json.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    try{
+      const dados = JSON.parse(e.target.result);
+
+      if(!Array.isArray(dados)){
+        throw new Error("O arquivo não contém uma lista de lançamentos.");
+      }
+
+      const restaurados = dados.map((l, index) => {
+        if(!l.data || !l.descricao || !l.tipo || !l.categoria || l.valor === undefined){
+          throw new Error("Estrutura inválida na linha " + (index + 1));
+        }
+
+        return {
+          id: l.id || Date.now() + index,
+          data: String(l.data).slice(0,10),
+          descricao: String(l.descricao),
+          tipo: String(l.tipo).toLowerCase().startsWith("r") ? "Receita" : "Despesa",
+          categoria: String(l.categoria || "Outros"),
+          valor: Number(l.valor)
+        };
+      });
+
+      if(!confirm("Restaurar este backup substituirá os lançamentos atuais deste navegador. Deseja continuar?")){
+        return;
+      }
+
+      lancamentos = restaurados;
+      localStorage.setItem("lancamentos_orcamento", JSON.stringify(lancamentos));
+
+      if(typeof paginaAtual !== "undefined"){
+        paginaAtual = 1;
+      }
+
+      if(typeof atualizar === "function"){
+        atualizar();
+      }
+
+      if(status){
+        status.textContent = restaurados.length + " lançamentos restaurados com sucesso.";
+      }
+
+      alert("Backup restaurado com sucesso! " + restaurados.length + " lançamentos recuperados.");
+    }catch(err){
+      console.error(err);
+      alert("Arquivo JSON inválido ou incompatível com o backup do sistema.");
+      if(status){
+        status.textContent = "Erro ao restaurar backup JSON.";
+      }
+    }
+  };
+
+  leitor.readAsText(arquivo, "UTF-8");
+}
+
 </script></body></html>
