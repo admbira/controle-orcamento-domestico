@@ -1,12 +1,3 @@
-# Controle Orçamento Doméstico v3.7
+# Controle Orçamento Doméstico v4.0
 
-Versão completa com:
-- Importação CSV/TXT/Excel
-- Exportação CSV
-- Backup JSON
-- Restauração de Backup JSON
-- Relatório PDF
-- Gráficos
-- Edição, duplicação e exclusão de lançamentos
-
-Para atualizar no GitHub Pages, substitua os arquivos antigos por estes e pressione Ctrl + F5 no navegador.
+Atualização com percentuais nos gráficos, no quadro de categorias e no relatório PDF.
